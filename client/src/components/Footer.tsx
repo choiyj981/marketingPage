@@ -4,22 +4,22 @@ import { Facebook, Twitter, Linkedin, Instagram, Mail } from "lucide-react";
 export default function Footer() {
   const footerLinks = {
     company: [
-      { label: "About", href: "#" },
-      { label: "Blog", href: "/blog" },
-      { label: "Careers", href: "#" },
-      { label: "Contact", href: "/contact" },
+      { label: "소개", href: "#" },
+      { label: "블로그", href: "/blog" },
+      { label: "채용", href: "#" },
+      { label: "문의", href: "/contact" },
     ],
     products: [
-      { label: "Products", href: "/products" },
-      { label: "Services", href: "/services" },
-      { label: "Resources", href: "/resources" },
-      { label: "Pricing", href: "#" },
+      { label: "강의/제품", href: "/products" },
+      { label: "서비스", href: "/services" },
+      { label: "자료실", href: "/resources" },
+      { label: "가격", href: "#" },
     ],
     legal: [
-      { label: "Privacy Policy", href: "#" },
-      { label: "Terms of Service", href: "#" },
-      { label: "Cookie Policy", href: "#" },
-      { label: "Refund Policy", href: "#" },
+      { label: "개인정보처리방침", href: "#" },
+      { label: "이용약관", href: "#" },
+      { label: "쿠키 정책", href: "#" },
+      { label: "환불 정책", href: "#" },
     ],
   };
 
@@ -40,10 +40,10 @@ export default function Footer() {
               <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-lg">B</span>
               </div>
-              <span className="font-display font-bold text-xl">Business Platform</span>
+              <span className="font-display font-bold text-xl">알파GOGOGO</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              A comprehensive platform for digital products, programs, and business services with premium quality.
+              디지털 제품, 교육 프로그램, 비즈니스 서비스를 제공하는 프리미엄 플랫폼입니다.
             </p>
             <div className="flex space-x-3">
               {socialLinks.map((social) => (
@@ -62,7 +62,7 @@ export default function Footer() {
 
           {/* Company Links */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Company</h3>
+            <h3 className="font-semibold text-foreground mb-4">회사</h3>
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
@@ -81,7 +81,7 @@ export default function Footer() {
 
           {/* Products Links */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Products</h3>
+            <h3 className="font-semibold text-foreground mb-4">서비스</h3>
             <ul className="space-y-3">
               {footerLinks.products.map((link) => (
                 <li key={link.label}>
@@ -100,7 +100,7 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">Legal</h3>
+            <h3 className="font-semibold text-foreground mb-4">법률</h3>
             <ul className="space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
@@ -121,7 +121,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-muted-foreground text-center md:text-left">
-              © {new Date().getFullYear()} Business Platform. All rights reserved.
+              © {new Date().getFullYear()} 알파GOGOGO. All rights reserved.
             </p>
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Mail className="h-4 w-4" />

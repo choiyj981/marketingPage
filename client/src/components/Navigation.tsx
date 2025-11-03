@@ -31,14 +31,14 @@ export default function Navigation() {
   }, []);
 
   const navLinks = [
-    { path: "/", label: "Home" },
-    { path: "/blog", label: "Blog" },
-    { path: "/products", label: "Products" },
+    { path: "/", label: "홈" },
+    { path: "/blog", label: "블로그" },
+    { path: "/products", label: "강의/제품" },
   ];
 
   const moreLinks = [
-    { path: "/services", label: "Services" },
-    { path: "/resources", label: "Resources" },
+    { path: "/services", label: "서비스" },
+    { path: "/resources", label: "자료실" },
   ];
 
   return (
@@ -61,7 +61,7 @@ export default function Navigation() {
               <span className="text-primary-foreground font-bold text-lg">B</span>
             </div>
             <span className="font-display font-bold text-lg md:text-xl text-foreground">
-              Business Platform
+              알파GOGOGO
             </span>
           </Link>
 
@@ -91,7 +91,7 @@ export default function Navigation() {
                   className="gap-1"
                   data-testid="button-more-menu"
                 >
-                  More
+                  더보기
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -116,14 +116,14 @@ export default function Navigation() {
               isAuthenticated ? (
                 <>
                   <span className="text-sm text-foreground/70">
-                    Hi, {user?.firstName || user?.email || 'User'}
+                    안녕하세요, {user?.firstName || user?.email || '사용자'}님
                   </span>
                   <Button 
                     variant="ghost"
                     onClick={() => window.location.href = '/api/logout'}
                     data-testid="button-logout"
                   >
-                    Logout
+                    로그아웃
                   </Button>
                 </>
               ) : (
@@ -133,13 +133,13 @@ export default function Navigation() {
                   data-testid="button-login"
                 >
                   <User className="w-4 h-4 mr-2" />
-                  Login
+                  로그인
                 </Button>
               )
             )}
             <Link href="/contact">
               <Button data-testid="button-contact-cta">
-                Get Started
+                시작하기
               </Button>
             </Link>
           </div>
@@ -179,7 +179,7 @@ export default function Navigation() {
                       onClick={() => setIsMobileOpen(false)}
                       data-testid="button-mobile-contact"
                     >
-                      Get Started
+                      시작하기
                     </Button>
                   </Link>
                 </div>
