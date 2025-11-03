@@ -56,14 +56,23 @@ Preferred communication style: Simple, everyday language.
 
 **API Design**:
 - RESTful endpoints under `/api` prefix
-- Separate route handlers for blog, products, resources, services, and contacts
-- In-memory storage implementation (IStorage interface) designed for future database migration
+- Separate route handlers for blog, products, resources, services, contacts, and authentication
+- PostgreSQL storage via Drizzle ORM (migrated from in-memory implementation)
 - Response standardization with error handling
+- Protected routes using isAuthenticated middleware
 
 **Data Layer**:
-- Storage abstraction via IStorage interface (currently MemStorage implementation)
-- Prepared for Drizzle ORM integration with PostgreSQL
+- Storage abstraction via IStorage interface (PostgreSQL implementation via DbStorage)
+- Drizzle ORM for type-safe database operations
 - Schema definitions in shared directory for type safety across client/server
+
+**Authentication**:
+- Replit Auth integration using OpenID Connect (OIDC)
+- Support for multiple login providers: Google, GitHub, X, Apple, email/password
+- Session management using express-session with PostgreSQL session store (connect-pg-simple)
+- Environment-aware configuration (HTTP for dev, HTTPS for production)
+- Token refresh and user session management
+- Protected API routes with isAuthenticated middleware
 
 ### Database Schema
 
@@ -97,6 +106,17 @@ Preferred communication style: Simple, everyday language.
    - Name, email, subject, message fields
    - Timestamp tracking
 
+6. **users**: User accounts for authentication
+   - UUID primary key
+   - OIDC subject (sub) for Replit Auth integration
+   - Email, first name, last name
+   - Refresh token storage for token renewal
+   - Timestamp tracking
+
+7. **sessions**: Express session storage for authentication
+   - Session ID, data (JSON), expiration timestamp
+   - Managed by connect-pg-simple
+
 **Database Configuration**:
 - Connection via DATABASE_URL environment variable
 - Migration files output to `./migrations` directory
@@ -108,6 +128,13 @@ Preferred communication style: Simple, everyday language.
 - PostgreSQL via Neon serverless (@neondatabase/serverless)
 - Connection pooling handled by Neon adapter
 - Session storage using connect-pg-simple (PostgreSQL session store for Express)
+- Migrated from in-memory storage to persistent database
+
+**Authentication**:
+- Replit Auth via openid-client and passport
+- Session management via express-session and connect-pg-simple
+- Token refresh with memoization for performance
+- Multi-provider support (Google, GitHub, X, Apple, email/password)
 
 **Development Tools**:
 - Replit-specific plugins for development experience (cartographer, dev banner, runtime error modal)
