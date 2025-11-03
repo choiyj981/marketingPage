@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +19,7 @@ export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [location] = useLocation();
+  const { isAuthenticated, user, isLoading } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -108,8 +110,33 @@ export default function Navigation() {
             </DropdownMenu>
           </div>
 
-          {/* CTA Button */}
+          {/* Auth & CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            {!isLoading && (
+              isAuthenticated ? (
+                <>
+                  <span className="text-sm text-foreground/70">
+                    Hi, {user?.firstName || user?.email || 'User'}
+                  </span>
+                  <Button 
+                    variant="ghost"
+                    onClick={() => window.location.href = '/api/logout'}
+                    data-testid="button-logout"
+                  >
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <Button 
+                  variant="ghost"
+                  onClick={() => window.location.href = '/api/login'}
+                  data-testid="button-login"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Login
+                </Button>
+              )
+            )}
             <Link href="/contact">
               <Button data-testid="button-contact-cta">
                 Get Started

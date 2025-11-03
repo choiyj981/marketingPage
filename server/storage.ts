@@ -9,16 +9,23 @@ import {
   type InsertService,
   type Contact,
   type InsertContact,
+  type User,
+  type UpsertUser,
   blogPosts,
   products,
   resources,
   services,
   contacts,
+  users,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
+  // Users (required for Replit Auth)
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+
   // Blog Posts
   getAllBlogPosts(): Promise<BlogPost[]>;
   getBlogPostBySlug(slug: string): Promise<BlogPost | undefined>;
@@ -51,6 +58,7 @@ class MemStorage implements IStorage {
   private resources: Map<string, Resource>;
   private services: Map<string, Service>;
   private contacts: Map<string, Contact>;
+  private users: Map<string, User>;
 
   constructor() {
     this.blogPosts = new Map();
@@ -58,8 +66,29 @@ class MemStorage implements IStorage {
     this.resources = new Map();
     this.services = new Map();
     this.contacts = new Map();
+    this.users = new Map();
     
     this.seedData();
+  }
+
+  // Users (stub implementation)
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.get(id);
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const user: User = {
+      ...userData,
+      id: userData.id || `user-${Date.now()}`,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      email: userData.email || null,
+      firstName: userData.firstName || null,
+      lastName: userData.lastName || null,
+      profileImageUrl: userData.profileImageUrl || null,
+    };
+    this.users.set(user.id, user);
+    return user;
   }
 
   // Blog Posts
@@ -400,6 +429,27 @@ class MemStorage implements IStorage {
 
 // PostgreSQL-based storage implementation
 export class PgStorage implements IStorage {
+  // Users (required for Replit Auth)
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
+  }
+
   // Blog Posts
   async getAllBlogPosts(): Promise<BlogPost[]> {
     return await db.select().from(blogPosts).orderBy(desc(blogPosts.publishedAt));
