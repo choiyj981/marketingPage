@@ -66,13 +66,12 @@ export default function Footer() {
             <ul className="space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href}>
-                    <a
-                      data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover-elevate active-elevate-2 px-1 py-0.5 rounded"
-                    >
-                      {link.label}
-                    </a>
+                  <Link 
+                    href={link.href}
+                    data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover-elevate active-elevate-2 px-1 py-0.5 rounded"
+                  >
+                    {link.label}
                   </Link>
                 </li>
               ))}
@@ -85,13 +84,12 @@ export default function Footer() {
             <ul className="space-y-3">
               {footerLinks.products.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href}>
-                    <a
-                      data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover-elevate active-elevate-2 px-1 py-0.5 rounded"
-                    >
-                      {link.label}
-                    </a>
+                  <Link 
+                    href={link.href}
+                    data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover-elevate active-elevate-2 px-1 py-0.5 rounded"
+                  >
+                    {link.label}
                   </Link>
                 </li>
               ))}
