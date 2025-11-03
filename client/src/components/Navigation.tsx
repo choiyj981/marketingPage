@@ -50,31 +50,33 @@ export default function Navigation() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link href="/" data-testid="link-home">
-            <a className="flex items-center space-x-2 hover-elevate active-elevate-2 px-2 py-1 rounded-md transition-colors">
-              <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">B</span>
-              </div>
-              <span className="font-display font-bold text-lg md:text-xl text-foreground">
-                Business Platform
-              </span>
-            </a>
+          <Link 
+            href="/" 
+            data-testid="link-home"
+            className="flex items-center space-x-2 hover-elevate active-elevate-2 px-2 py-1 rounded-md transition-colors"
+          >
+            <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-lg">B</span>
+            </div>
+            <span className="font-display font-bold text-lg md:text-xl text-foreground">
+              Business Platform
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
             {navLinks.map((link) => (
-              <Link key={link.path} href={link.path}>
-                <a
-                  data-testid={`link-${link.label.toLowerCase()}`}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors hover-elevate active-elevate-2 ${
-                    location === link.path
-                      ? "text-primary"
-                      : "text-foreground/70 hover:text-foreground"
-                  }`}
-                >
-                  {link.label}
-                </a>
+              <Link 
+                key={link.path} 
+                href={link.path}
+                data-testid={`link-${link.label.toLowerCase()}`}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors hover-elevate active-elevate-2 ${
+                  location === link.path
+                    ? "text-primary"
+                    : "text-foreground/70 hover:text-foreground"
+                }`}
+              >
+                {link.label}
               </Link>
             ))}
 
@@ -129,18 +131,18 @@ export default function Navigation() {
             <SheetContent side="right" className="w-[280px] sm:w-[320px]">
               <div className="flex flex-col space-y-4 mt-8">
                 {[...navLinks, ...moreLinks].map((link) => (
-                  <Link key={link.path} href={link.path}>
-                    <a
-                      onClick={() => setIsMobileOpen(false)}
-                      data-testid={`link-mobile-${link.label.toLowerCase()}`}
-                      className={`block px-4 py-3 rounded-md text-base font-medium transition-colors hover-elevate ${
-                        location === link.path
-                          ? "bg-primary/10 text-primary"
-                          : "text-foreground/80 hover:bg-accent"
-                      }`}
-                    >
-                      {link.label}
-                    </a>
+                  <Link 
+                    key={link.path} 
+                    href={link.path}
+                    onClick={() => setIsMobileOpen(false)}
+                    data-testid={`link-mobile-${link.label.toLowerCase()}`}
+                    className={`block px-4 py-3 rounded-md text-base font-medium transition-colors hover-elevate ${
+                      location === link.path
+                        ? "bg-primary/10 text-primary"
+                        : "text-foreground/80 hover:bg-accent"
+                    }`}
+                  >
+                    {link.label}
                   </Link>
                 ))}
                 <div className="pt-4 border-t">
