@@ -36,14 +36,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Section */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">B</span>
+            <div className="flex items-center space-x-2.5">
+              <div className="relative w-9 h-9 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
+                <svg className="w-5 h-5 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                </svg>
               </div>
-              <span className="font-display font-bold text-xl">알파GOGOGO</span>
+              <span className="font-display font-bold text-xl bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">모두의광고</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              디지털 제품, 교육 프로그램, 비즈니스 서비스를 제공하는 프리미엄 플랫폼입니다.
+              효과적인 광고 솔루션과 마케팅 전략을 제공하는 프리미엄 플랫폼입니다.
             </p>
             <div className="flex space-x-3">
               {socialLinks.map((social) => (

@@ -1,248 +1,277 @@
-# Design Guidelines: Premium Business Platform
+# Design Guidelines: 모두의광고 (Everyone's Advertising)
 
 ## Design Approach
 
-**Reference-Based Design**: Drawing inspiration from Stripe's premium restraint, Notion's content clarity, and Linear's sophisticated typography. The platform balances professional authority with approachable learning - positioning as a trusted AI education and service provider.
+**Reference-Based Design**: Drawing from Stripe's premium restraint, Notion's content clarity, and Linear's sophisticated typography, adapted for advertising/marketing industry. Creates professional authority with modern creative energy - positioning as a trusted advertising and marketing expertise platform.
 
-**Core Design Principles**:
-- Premium minimalism with purposeful visual hierarchy
-- Content-first approach emphasizing readability and scanability
-- Sophisticated card-based layouts for products and content
-- Clear information architecture across multiple content types
-- Trust-building through structured, professional presentation
+**Core Principles**:
+- Premium minimalism with bold advertising-focused visuals
+- Card-based layouts showcasing campaigns, services, and case studies
+- Gradient treatments and layered shadows for dimensional depth
+- Mobile-first responsive architecture
+- Korean typography optimization with generous spacing
+
+---
+
+## Brand Colors & Visual Treatment
+
+**Primary Palette**:
+- **Indigo #6366F1**: Primary CTAs, links, key UI elements
+- **Green #10B981**: Success states, metrics, growth indicators
+- **Amber #F59E0B**: Highlighted content, urgent CTAs, special badges
+- **Dark #1A1A1A**: Headers, footers, text on light backgrounds
+- **Light #FAFAFA**: Page backgrounds, card backgrounds
+- **Muted #374151**: Secondary text, metadata, subtle borders
+
+**Gradient Applications**:
+- Hero backgrounds: Indigo to Dark (from-indigo-600 to-gray-900)
+- Card overlays: Transparent to Dark gradient on images
+- Section dividers: Subtle indigo-to-transparent gradients
+- Button hover states: Brightness adjustments maintaining brand colors
+
+**Shadow System**:
+- **Subtle**: shadow-sm (default cards)
+- **Medium**: shadow-lg (elevated cards, navigation)
+- **Heavy**: shadow-2xl (modals, featured content)
+- **Hover Enhancement**: shadow-lg → shadow-2xl transitions
 
 ---
 
 ## Typography Hierarchy
 
-**Font Stack**: Inter for UI elements and body text, SF Pro Display for headlines (fallback to system fonts)
+**Font Stack**: Inter (UI/body), SF Pro Display (headlines), Poppins (accent numbers/stats)
 
 **Heading Scales**:
-- **H1 (Hero)**: text-5xl md:text-6xl lg:text-7xl, font-bold, tracking-tight
-- **H2 (Section)**: text-3xl md:text-4xl lg:text-5xl, font-bold
-- **H3 (Subsection)**: text-2xl md:text-3xl, font-semibold
-- **H4 (Card Title)**: text-xl md:text-2xl, font-semibold
-- **H5 (Component Header)**: text-lg md:text-xl, font-medium
-- **H6 (Label)**: text-base, font-medium, uppercase tracking-wide
+- **H1**: text-5xl md:text-6xl lg:text-7xl, font-bold, tracking-tight, leading-tight
+- **H2**: text-3xl md:text-4xl lg:text-5xl, font-bold, leading-tight
+- **H3**: text-2xl md:text-3xl, font-semibold
+- **H4**: text-xl md:text-2xl, font-semibold
+- **H5**: text-lg md:text-xl, font-medium
+- **H6**: text-sm md:text-base, font-medium, uppercase, tracking-wider
 
-**Body Text**:
-- **Large Body**: text-lg leading-relaxed (hero subheadings, important descriptions)
-- **Regular Body**: text-base leading-relaxed (standard content)
-- **Small Body**: text-sm leading-normal (metadata, captions)
-- **Micro**: text-xs (labels, timestamps)
+**Body Text**: 
+- **Hero/Large**: text-lg md:text-xl, leading-relaxed (line-height 1.7)
+- **Standard**: text-base, leading-relaxed (line-height 1.7)
+- **Small**: text-sm, leading-normal (line-height 1.6)
+- **Caption**: text-xs, leading-snug
 
-**Korean Typography Considerations**: Ensure adequate line-height (1.6-1.8) for Korean characters, maintain consistent vertical rhythm
+**Korean Optimization**: line-height 1.7-1.8 for all Korean text, letter-spacing normal (no tight tracking)
 
 ---
 
 ## Layout System & Spacing
 
 **Container Strategy**:
-- **Max-width**: max-w-7xl for main content containers
-- **Max-width prose**: max-w-4xl for blog content and long-form text
-- **Full-width**: w-full for hero sections and immersive content
+- **Max-width Standard**: max-w-7xl for content sections
+- **Max-width Narrow**: max-w-4xl for article content
+- **Full-width**: w-full for heroes, immersive sections
 
-**Spacing Primitives**: Use Tailwind spacing units of **2, 4, 6, 8, 12, 16, 20, 24, 32**
+**Spacing Units**: Tailwind primitives **2, 4, 6, 8, 12, 16, 20, 24, 32**
 - **Component padding**: p-6 md:p-8 lg:p-12
-- **Section spacing**: py-16 md:py-20 lg:py-32
-- **Card gaps**: gap-6 md:gap-8
-- **Inline spacing**: space-x-4, space-y-2
+- **Section spacing**: py-16 md:py-24 lg:py-32
+- **Card gaps**: gap-6 md:gap-8 lg:gap-12
+- **Element spacing**: space-y-4, space-x-6
 
 **Grid Systems**:
-- **Product/Service Cards**: grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-- **Feature Highlights**: grid-cols-1 md:grid-cols-2
-- **Blog Posts**: grid-cols-1 md:grid-cols-2 lg:grid-cols-3
-- **Resource Items**: Single column list on mobile, grid-cols-2 lg:grid-cols-3 on desktop
+- **Service Cards**: grid-cols-1 md:grid-cols-2 lg:grid-cols-3
+- **Case Studies**: grid-cols-1 md:grid-cols-2
+- **Testimonials**: grid-cols-1 md:grid-cols-2 lg:grid-cols-3
+- **Stats Display**: grid-cols-2 md:grid-cols-4
 
 ---
 
 ## Component Library
 
 ### Navigation
-**Desktop Header**: Fixed top navigation with transparent-to-solid on scroll, logo left, primary links center, CTA button right, dropdown menus for "더보기" (More) section containing GPTs, Services, Resources
+**Desktop Header**: Sticky header, dark background with slight transparency (backdrop-blur-md), logo left, primary links center, dual CTAs right (secondary outlined + primary solid), mega menu for Services dropdown
 
-**Mobile Header**: Hamburger menu icon, slide-in navigation drawer with stacked links, prominent CTA at bottom
-
-**Mega Menu Pattern** (for GPTs section): Multi-column dropdown showing categorized tools (Blog GPTs, Other GPTs, Templates) with icons and descriptions
+**Mobile Header**: Dark header, hamburger menu, full-screen overlay navigation with stacked links, gradient background, CTAs at bottom
 
 ### Hero Sections
-**Homepage Hero**: 
-- Large gradient background (subtle gradient from deep black to charcoal)
-- Centered content with large H1, subheading, dual CTAs
-- Hero image/illustration showing AI-powered platform concept
-- Height: min-h-[600px] md:min-h-[700px]
 
-**Product Page Hero**:
-- Split layout: content left, product preview/video right
-- Status badges ("모집 중", "HOT", etc.)
-- Enrollment countdown timer component
+**Homepage Hero**: 
+- Full-width gradient background (indigo-to-dark gradient)
+- Large hero image: Modern advertising workspace, marketing analytics dashboard, or creative team collaboration scene with gradient overlay
+- Centered content with H1, large subheading, dual CTAs (primary + secondary)
+- Height: min-h-[700px] md:min-h-[800px]
+- Floating stats cards overlay (transparent cards showing key metrics)
+- CTA buttons with blurred backgrounds (backdrop-blur-sm), no hover state modifications
+
+**Service Page Hero**: 
+- Split layout: content left (60%), service visualization right (40%)
+- Service category badge, title, description
+- Key benefits list with checkmark icons
+- Primary CTA with blurred background
 
 ### Cards
-**Product/Service Cards**:
-- Clean white background with subtle shadow (shadow-lg hover:shadow-xl)
-- Card image with 16:9 aspect ratio
-- Category badge (top-left overlay or above title)
-- Title, description excerpt, metadata (author, date)
-- Hover: Subtle lift effect (transform translate-y-[-4px])
 
-**Blog Post Cards**:
-- Featured image with gradient overlay for text readability
-- Category tag, title, excerpt, author avatar, read time
-- Consistent aspect ratio across all images
+**Service Cards**:
+- White background, rounded-2xl, shadow-lg hover:shadow-2xl
+- Icon or illustration at top (gradient-filled icons using brand colors)
+- Service title, description (2-3 lines)
+- Feature list with icons
+- "Learn More" link with arrow
+- Hover: Subtle lift (translate-y-[-6px]), shadow enhancement
 
-**Resource/Download Cards**:
-- Icon or thumbnail preview
-- File type badge, file size indicator
-- Download count, date added
-- Primary download button
+**Case Study Cards**:
+- Featured image with dark gradient overlay
+- Client logo overlay (top-left)
+- Results metrics badges (top-right): "+150% ROI", "300% Growth"
+- Title, industry tag, brief description
+- "View Case Study" CTA
+- Aspect ratio: 16:9 for images
 
-### Forms
-**Contact Forms**:
-- Clean label-above-input layout
-- Input styling: border-2, rounded-lg, focus states with brand color
-- Validation feedback inline
-- Submit button with loading state
+**Blog/Resource Cards**:
+- Thumbnail image with category badge overlay
+- Title, excerpt, author avatar, date
+- Read time indicator
+- Hover: Scale image slightly (scale-105)
 
-**Search Input**:
-- Prominent search bar with icon
-- Dropdown suggestions on focus
-- Category filters below search
+**Testimonial Cards**:
+- Light background with subtle border
+- Quote text (large, italic)
+- Client photo (circular avatar)
+- Name, company, role
+- Star rating (if applicable)
 
 ### Content Sections
-**Step-by-Step Guides**:
-- Numbered step indicators (large circled numbers)
-- Visual flow with connecting lines between steps
-- Card-based step content with icons
-- Screenshots or illustrations for each step
-
-**Pricing Tables**:
-- 4-column grid on desktop (stacks on mobile)
-- Highlighted "recommended" plan with visual distinction
-- Feature comparison checkmarks
-- Prominent CTA buttons per plan
-
-**Video Preview Sections**:
-- Video thumbnail with play overlay
-- Title and duration below
-- Grid layout for multiple videos
-
-**FAQ Accordion**:
-- Clean expandable sections
-- Plus/minus icon indicators
-- Smooth height transitions
 
 **Stats/Metrics Display**:
-- Large numbers (text-4xl md:text-5xl) with labels
-- Grid layout: 2 columns mobile, 4 columns desktop
-- Icon accompaniment optional
+- Large numbers (text-5xl md:text-6xl, Poppins font) in success green
+- Descriptive label below
+- Icon accompaniment
+- Animated counter effect on scroll
+- 4-column grid desktop, 2-column mobile
+
+**Service Showcase**:
+- Alternating left/right layouts
+- Image/illustration on one side, content on other
+- Numbered sections (large gradient numbers)
+- Feature highlights with icons
+- Background pattern or subtle gradient
+
+**Process Timeline**:
+- Horizontal timeline on desktop, vertical on mobile
+- Step numbers in gradient circles
+- Connecting lines between steps
+- Step title, description, icon
+- Optional screenshot/illustration per step
+
+**Pricing Tables**:
+- 3-column layout (stacks on mobile)
+- Featured plan with amber accent border and "Most Popular" badge
+- Plan name, price (large Poppins font), billing cycle
+- Feature checklist with icons
+- CTA button per plan
+- Background: light for standard, subtle gradient for featured
+
+**FAQ Accordion**:
+- Question text with expand icon (chevron)
+- Answer content with generous padding
+- Smooth height transition
+- Alternating background shades (light/white)
+
+**Video Showcase**:
+- Large video thumbnail with play button overlay (indigo gradient background)
+- Video title, duration, view count
+- Grid layout for multiple videos: 2 columns desktop, 1 column mobile
+
+### Forms
+
+**Contact/Inquiry Forms**:
+- Label above input, clear hierarchy
+- Input styling: rounded-lg, border-2 (muted), focus:border-indigo-600
+- Large padding for inputs (px-4 py-3)
+- Select dropdowns with custom arrow
+- Textarea for messages
+- Submit button with loading spinner state
+- Inline validation messages (success green, error red)
+
+**Newsletter Signup**:
+- Inline email + submit button
+- Compact design with rounded-full inputs
+- Success message below on submit
 
 ### Footer
-**Multi-column Footer**:
-- Logo and tagline (left column)
-- Quick links organized by category (2-3 middle columns)
-- Newsletter signup form (right column)
-- Bottom bar: Copyright, social media icons, legal links
-- Background: Deep black (#1A1A1A)
+
+**Multi-Column Footer**:
+- Dark background (#1A1A1A)
+- Logo and tagline left column
+- 3 middle columns: Services, Resources, Company links
+- Right column: Contact info, social media icons
+- Newsletter signup section above columns
+- Bottom bar: Copyright, legal links, language selector
+- Subtle top border with indigo accent
 
 ---
 
 ## Page-Specific Layouts
 
 ### Homepage
-1. **Hero Section**: Large hero with video background option, dual CTAs
-2. **Value Proposition**: 3-column feature grid highlighting AI benefits
-3. **Latest Blog Posts**: 3-column card grid with "View All" link
-4. **GPTS Tools Preview**: Featured tools with category tabs
-5. **Services Overview**: 2-column showcase of main services
-6. **Resources Teaser**: Download highlights with preview
-7. **Community Section**: Split layout - chat room preview left, business inquiry right
-8. **Learning Path**: Progressive disclosure of beginner/intermediate/advanced content
+1. **Hero**: Large hero image, dual CTAs, floating metrics cards
+2. **Services Overview**: 3-column service cards with icons
+3. **Results/Stats**: 4-column metrics display with large numbers
+4. **Featured Case Studies**: 2-column showcase with results badges
+5. **Process Timeline**: 5-step horizontal timeline
+6. **Client Testimonials**: 3-column testimonial cards with carousel
+7. **Latest Insights**: 3-column blog preview cards
+8. **CTA Section**: Full-width gradient background, centered content, dual CTAs
 
-### Blog Listing
-- **Filter Sidebar**: Category filter (left on desktop, top on mobile)
-- **Main Grid**: 3-column post cards with pagination
-- **Featured Post**: Large card at top (full-width)
+### Services Page
+- Service category navigation tabs
+- Hero per service with split layout
+- Benefits grid (3 columns)
+- Case study examples (2 columns)
+- Pricing comparison table
+- Process breakdown
+- Related services cards
 
-### Blog Post
-- **Hero Image**: Full-width featured image with gradient overlay for title
-- **Content Container**: max-w-4xl, generous line spacing
-- **Typography**: Larger text (text-lg) for readability
-- **Related Posts**: 3-card grid at bottom
+### Case Studies Page
+- Filter sidebar: Industry, service type, results
+- Featured case study (full-width card)
+- Grid of case studies (2 columns)
+- Pagination
 
-### Product/Course Pages
-- **Hero**: Video preview + enrollment section
-- **Course Preview Videos**: 2-column grid
-- **Curriculum Section**: Accordion-style module breakdown
-- **Value Propositions**: Icon + text blocks
-- **Countdown Timer**: Prominent enrollment deadline
-- **FAQs**: Full-width accordion
-
-### Resources/Downloads
-- **Filter Options**: Category tags (horizontal scroll on mobile)
-- **Featured Resources**: Large cards with prominent badges
-- **Resource Grid**: Table-style layout on desktop, cards on mobile
-- **Download Stats**: Visual indicators for popularity
+### Blog/Resources
+- Category filter tabs (horizontal scroll mobile)
+- Featured post (large card)
+- Grid of posts (3 columns)
+- Load more button
 
 ### Contact Page
-- **Split Layout**: Form left (60%), contact info + map right (40%)
-- **Form Fields**: Name, email, subject, message
-- **Alternative Contact**: Business inquiry specific CTAs
+- Split layout: Form left (60%), contact info + map right (40%)
+- Office locations cards
+- Social media links
+- Business hours
 
 ---
 
 ## Images
 
-**Hero Images**:
-- **Homepage**: Abstract AI/technology visualization with gradient overlay (blurred buttons with backdrop-blur-sm on CTAs)
-- **Product Pages**: Course thumbnail or product screenshot
-- **Blog Posts**: Category-relevant featured images
+**Homepage Hero**: Modern advertising workspace showing multiple screens with campaign analytics, creative team in bright office setting, or abstract marketing visualization with geometric shapes and gradient overlays
 
-**Product/Service Images**:
-- Consistent aspect ratios (16:9 for cards)
-- Screenshot mockups for digital products
-- Lifestyle/conceptual images for services
+**Service Pages**: Specific service visualizations - social media dashboards, SEO analytics, content creation scenes, video production equipment
 
-**GPTS Tool Icons**: Logo placeholder images for each GPT tool (uniform sizing)
+**Case Study Images**: Before/after campaign results, client product shots, campaign creative samples
 
-**Avatars**: Author profile images (circular, 40px × 40px for cards, 80px × 80px for full posts)
+**Card Thumbnails**: Industry-specific stock images, abstract patterns with brand gradients, client logos on solid backgrounds
 
-**Badges/Icons**: Category badges, "HOT" labels, "추천" (Recommended) tags, file type icons
+**Team/About**: Professional team photos in modern office, candid collaboration moments
+
+**Icons**: Line icons from Heroicons for features, Font Awesome for social media
+
+**Background Patterns**: Subtle geometric patterns, gradient mesh overlays for section backgrounds
 
 ---
 
-## Interaction Patterns
+## Interaction & Animation
 
-**Buttons**:
-- **Primary CTA**: Solid indigo (#6366F1) background, white text, rounded-lg, hover:brightness-110
-- **Secondary CTA**: Outlined style, transparent background, border-2
-- **Text Links**: Underline on hover, color transition
+**Smooth Transitions**: All hover states use transition-all duration-300
+**Card Hovers**: Lift + shadow enhancement (transform translate-y-[-6px] + shadow-2xl)
+**Button States**: Primary buttons brighten on hover (brightness-110), outlined buttons fill
+**Scroll Animations**: Fade-in on scroll for sections, counter animations for stats (use sparingly)
+**Loading States**: Skeleton screens for content, spinner for forms
+**Navigation**: Smooth dropdown slide-down, mobile menu slide-in from right
+**Hero CTAs**: Blurred backgrounds (backdrop-blur-sm bg-white/10), maintain consistent appearance regardless of state
 
-**Card Interactions**:
-- Subtle hover lift (transform translate-y-[-4px])
-- Shadow enhancement on hover
-- Smooth transitions (transition-all duration-300)
-
-**Navigation**:
-- Dropdown menus slide down smoothly
-- Mobile menu slides from right
-- Active page indicator (border-b-2 or background highlight)
-
-**Loading States**: Skeleton screens for content loading, spinner for form submissions
-
-**Scroll Behaviors**: Sticky header on scroll, fade-in animations for sections (use sparingly)
-
----
-
-## Special Components
-
-**Countdown Timer**: Large numeric display with labels (Days, Hours, Minutes, Seconds), updates in real-time
-
-**Badge System**: Category badges (rounded-full, px-3, py-1, text-xs), status indicators ("모집 중", "HOT")
-
-**Video Player Embeds**: Responsive 16:9 containers for embedded video content
-
-**Table Components**: Responsive tables that convert to cards on mobile for resource listings
-
-**Social Proof Elements**: Download counts, user testimonials (if applicable), trust indicators
-
-This design system creates a premium, professional platform that effectively showcases digital products, educational content, and services while maintaining accessibility and user-friendly navigation across all device sizes.
+This comprehensive system creates a premium advertising platform balancing professional credibility with modern creative energy, optimized for Korean users and mobile-first interactions.

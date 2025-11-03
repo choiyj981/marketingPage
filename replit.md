@@ -1,15 +1,20 @@
-# Business Platform - Digital Products & Services
+# 모두의광고 - 광고 & 마케팅 플랫폼
 
 ## Overview
 
-This is a premium business platform built with React, Express, and PostgreSQL, designed to showcase and deliver digital products, educational programs, blog content, and business services. The application features a sophisticated, content-first design inspired by platforms like Stripe, Notion, and Linear, with support for both English and Korean content.
+"모두의광고"는 React, Express, PostgreSQL로 구축된 프리미엄 광고 및 마케팅 플랫폼입니다. 광고 교육 프로그램, 마케팅 자료, 비즈니스 서비스를 제공하며, Stripe, Notion, Linear에서 영감을 받은 세련된 디자인을 특징으로 합니다.
 
-The platform serves as a comprehensive business solution for managing and presenting:
-- Blog posts with SEO optimization
-- Digital products and programs
-- Downloadable resources
-- Business services
-- Contact/inquiry management
+플랫폼의 주요 기능:
+- SEO 최적화된 블로그 포스트
+- 광고/마케팅 교육 프로그램 및 제품
+- 다운로드 가능한 마케팅 자료
+- 광고 컨설팅 서비스
+- 문의사항 관리
+- 뉴스레터 구독 시스템
+- 통합 검색 기능
+- 리뷰/평가 시스템
+- FAQ
+- 소셜 공유
 
 ## User Preferences
 
