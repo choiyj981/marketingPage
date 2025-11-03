@@ -20,39 +20,54 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
+import { randomUUID } from "crypto";
 
 export interface IStorage {
   // Users (required for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
 
   // Blog Posts
   getAllBlogPosts(): Promise<BlogPost[]>;
   getBlogPostBySlug(slug: string): Promise<BlogPost | undefined>;
+  getBlogPostById(id: string): Promise<BlogPost | undefined>;
   createBlogPost(post: InsertBlogPost): Promise<BlogPost>;
+  updateBlogPost(id: string, post: Partial<InsertBlogPost>): Promise<BlogPost>;
+  deleteBlogPost(id: string): Promise<void>;
 
   // Products
   getAllProducts(): Promise<Product[]>;
   getProductBySlug(slug: string): Promise<Product | undefined>;
+  getProductById(id: string): Promise<Product | undefined>;
   createProduct(product: InsertProduct): Promise<Product>;
+  updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product>;
+  deleteProduct(id: string): Promise<void>;
 
   // Resources
   getAllResources(): Promise<Resource[]>;
   getResourceBySlug(slug: string): Promise<Resource | undefined>;
+  getResourceById(id: string): Promise<Resource | undefined>;
   createResource(resource: InsertResource): Promise<Resource>;
+  updateResource(id: string, resource: Partial<InsertResource>): Promise<Resource>;
+  deleteResource(id: string): Promise<void>;
 
   // Services
   getAllServices(): Promise<Service[]>;
   getServiceBySlug(slug: string): Promise<Service | undefined>;
+  getServiceById(id: string): Promise<Service | undefined>;
   createService(service: InsertService): Promise<Service>;
+  updateService(id: string, service: Partial<InsertService>): Promise<Service>;
+  deleteService(id: string): Promise<void>;
 
   // Contacts
   createContact(contact: InsertContact): Promise<Contact>;
   getAllContacts(): Promise<Contact[]>;
+  deleteContact(id: string): Promise<void>;
 }
 
-// Legacy MemStorage class - no longer used, kept for reference
-class MemStorage implements IStorage {
+// Legacy MemStorage class - no longer used, removed for clarity
+/* class MemStorage implements IStorage {
   private blogPosts: Map<string, BlogPost>;
   private products: Map<string, Product>;
   private resources: Map<string, Resource>;
@@ -425,13 +440,18 @@ class MemStorage implements IStorage {
       this.services.set(id, { ...service, id });
     });
   }
-}
+} */
 
 // PostgreSQL-based storage implementation
 export class PgStorage implements IStorage {
   // Users (required for Replit Auth)
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
     return user;
   }
 
@@ -460,9 +480,23 @@ export class PgStorage implements IStorage {
     return results[0];
   }
 
+  async getBlogPostById(id: string): Promise<BlogPost | undefined> {
+    const results = await db.select().from(blogPosts).where(eq(blogPosts.id, id));
+    return results[0];
+  }
+
   async createBlogPost(insertPost: InsertBlogPost): Promise<BlogPost> {
     const results = await db.insert(blogPosts).values(insertPost).returning();
     return results[0];
+  }
+
+  async updateBlogPost(id: string, post: Partial<InsertBlogPost>): Promise<BlogPost> {
+    const results = await db.update(blogPosts).set(post).where(eq(blogPosts.id, id)).returning();
+    return results[0];
+  }
+
+  async deleteBlogPost(id: string): Promise<void> {
+    await db.delete(blogPosts).where(eq(blogPosts.id, id));
   }
 
   // Products
@@ -475,9 +509,23 @@ export class PgStorage implements IStorage {
     return results[0];
   }
 
+  async getProductById(id: string): Promise<Product | undefined> {
+    const results = await db.select().from(products).where(eq(products.id, id));
+    return results[0];
+  }
+
   async createProduct(insertProduct: InsertProduct): Promise<Product> {
     const results = await db.insert(products).values(insertProduct).returning();
     return results[0];
+  }
+
+  async updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product> {
+    const results = await db.update(products).set(product).where(eq(products.id, id)).returning();
+    return results[0];
+  }
+
+  async deleteProduct(id: string): Promise<void> {
+    await db.delete(products).where(eq(products.id, id));
   }
 
   // Resources
@@ -490,9 +538,23 @@ export class PgStorage implements IStorage {
     return results[0];
   }
 
+  async getResourceById(id: string): Promise<Resource | undefined> {
+    const results = await db.select().from(resources).where(eq(resources.id, id));
+    return results[0];
+  }
+
   async createResource(insertResource: InsertResource): Promise<Resource> {
     const results = await db.insert(resources).values(insertResource).returning();
     return results[0];
+  }
+
+  async updateResource(id: string, resource: Partial<InsertResource>): Promise<Resource> {
+    const results = await db.update(resources).set(resource).where(eq(resources.id, id)).returning();
+    return results[0];
+  }
+
+  async deleteResource(id: string): Promise<void> {
+    await db.delete(resources).where(eq(resources.id, id));
   }
 
   // Services
@@ -505,9 +567,23 @@ export class PgStorage implements IStorage {
     return results[0];
   }
 
+  async getServiceById(id: string): Promise<Service | undefined> {
+    const results = await db.select().from(services).where(eq(services.id, id));
+    return results[0];
+  }
+
   async createService(insertService: InsertService): Promise<Service> {
     const results = await db.insert(services).values(insertService).returning();
     return results[0];
+  }
+
+  async updateService(id: string, service: Partial<InsertService>): Promise<Service> {
+    const results = await db.update(services).set(service).where(eq(services.id, id)).returning();
+    return results[0];
+  }
+
+  async deleteService(id: string): Promise<void> {
+    await db.delete(services).where(eq(services.id, id));
   }
 
   // Contacts
@@ -518,6 +594,10 @@ export class PgStorage implements IStorage {
 
   async getAllContacts(): Promise<Contact[]> {
     return await db.select().from(contacts).orderBy(desc(contacts.createdAt));
+  }
+
+  async deleteContact(id: string): Promise<void> {
+    await db.delete(contacts).where(eq(contacts.id, id));
   }
 }
 
