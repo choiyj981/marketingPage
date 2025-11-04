@@ -1,9 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, Link } from "wouter";
-import { ArrowLeft, Check, Share2 } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
+import SEO from "@/components/SEO";
+import StructuredData from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import SocialShare from "@/components/SocialShare";
+import ReviewSection from "@/components/ReviewSection";
+import RelatedContent from "@/components/RelatedContent";
 import type { Product } from "@shared/schema";
 
 export default function ProductDetail() {
@@ -50,6 +55,22 @@ export default function ProductDetail() {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title={`${product.title} - 광고 교육 | 모두의광고`}
+        description={product.description || product.fullDescription}
+        keywords={`${product.category}, 광고 교육, 광고 강의, ${product.tags?.join(', ') || '마케팅 교육, 디지털 광고'}`}
+        image={product.imageUrl}
+        url={window.location.href}
+        type="product"
+      />
+      <StructuredData
+        type="product"
+        name={product.title}
+        description={product.description || product.fullDescription}
+        price={product.price}
+        imageUrl={product.imageUrl || ''}
+        url={window.location.href}
+      />
       {/* Back Button */}
       <div className="bg-background/95 backdrop-blur-sm border-b sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -71,7 +92,8 @@ export default function ProductDetail() {
               {product.imageUrl && (
                 <img
                   src={product.imageUrl}
-                  alt={product.title}
+                  alt={`${product.title} - ${product.category} 광고 교육 프로그램`}
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
               )}
@@ -104,17 +126,14 @@ export default function ProductDetail() {
                 </span>
               </div>
 
-              <div className="flex gap-4">
+              <div className="space-y-4">
                 <Link href="/contact">
-                  <Button size="lg" className="gap-2" data-testid="button-get-started">
+                  <Button size="lg" className="gap-2 w-full" data-testid="button-get-started">
                     Get Started
                     <ArrowLeft className="h-5 w-5 rotate-180" />
                   </Button>
                 </Link>
-                <Button variant="outline" size="lg" className="gap-2" data-testid="button-share">
-                  <Share2 className="h-4 w-4" />
-                  Share
-                </Button>
+                <SocialShare title={product.title} />
               </div>
             </div>
           </div>
@@ -192,6 +211,12 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {/* Review Section */}
+      <ReviewSection productId={product.id} />
+
+      {/* Related Content */}
+      <RelatedContent type="product" currentId={product.id} tags={product.tags || []} />
     </div>
   );
 }

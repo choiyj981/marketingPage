@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import BlogCard from "@/components/BlogCard";
+import SEO from "@/components/SEO";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -31,14 +32,19 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen pt-24 pb-16">
+      <SEO
+        title="광고 마케팅 블로그 - 최신 광고 트렌드와 실전 전략 | 모두의광고"
+        description="광고 운영에 필요한 모든 정보를 제공합니다. 페이스북 광고, 구글 애즈, SNS 마케팅 등 최신 디지털 광고 트렌드와 실전 전략을 확인하세요."
+        keywords="광고 블로그, 마케팅 블로그, 페이스북 광고 팁, 구글 애즈 가이드, SNS 마케팅, 디지털 광고 트렌드, 광고 전략, 퍼포먼스 마케팅"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-foreground mb-4">
-            Blog
+          <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-foreground mb-4" data-testid="text-page-title">
+            광고 & 마케팅 블로그
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl">
-            Insights, updates, and thought leadership on digital transformation and business growth.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl" style={{ lineHeight: '1.8' }} data-testid="text-page-subtitle">
+            최신 광고 트렌드와 실전 마케팅 전략
           </p>
         </div>
 
@@ -48,7 +54,7 @@ export default function Blog() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search articles..."
+              placeholder="블로그 검색..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -64,7 +70,7 @@ export default function Blog() {
               onClick={() => setSelectedCategory(null)}
               data-testid="badge-category-all"
             >
-              All
+              전체
             </Badge>
             {categories.map((category) => (
               <Badge
@@ -83,7 +89,7 @@ export default function Blog() {
         {/* Results Count */}
         <div className="mb-6">
           <p className="text-sm text-muted-foreground" data-testid="text-results-count">
-            {filteredPosts.length} {filteredPosts.length === 1 ? "article" : "articles"} found
+            {filteredPosts.length}개의 포스트
           </p>
         </div>
 
@@ -102,11 +108,11 @@ export default function Blog() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-muted-foreground text-lg mb-2" data-testid="text-no-results">
-              No articles found
+            <p className="text-muted-foreground text-lg mb-2" data-testid="text-no-results" style={{ lineHeight: '1.7' }}>
+              포스트가 없습니다
             </p>
-            <p className="text-sm text-muted-foreground">
-              Try adjusting your search or filter criteria
+            <p className="text-sm text-muted-foreground" style={{ lineHeight: '1.7' }}>
+              검색어나 필터를 변경해보세요
             </p>
           </div>
         )}

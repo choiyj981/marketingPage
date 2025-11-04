@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Menu, X, ChevronDown, User } from "lucide-react";
+import { Menu, X, ChevronDown, User, Search as SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -14,10 +14,13 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import SearchBar from "@/components/SearchBar";
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [location] = useLocation();
   const { isAuthenticated, user, isLoading } = useAuth();
 
@@ -39,6 +42,7 @@ export default function Navigation() {
   const moreLinks = [
     { path: "/services", label: "서비스" },
     { path: "/resources", label: "자료실" },
+    { path: "/faq", label: "FAQ" },
   ];
 
   return (
@@ -66,6 +70,11 @@ export default function Navigation() {
               모두의광고
             </span>
           </Link>
+
+          {/* Desktop Search & Navigation */}
+          <div className="hidden md:flex items-center flex-1 max-w-xl mx-6">
+            <SearchBar />
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
@@ -146,17 +155,26 @@ export default function Navigation() {
             </Link>
           </div>
 
-          {/* Mobile Menu */}
-          <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                data-testid="button-mobile-menu"
-              >
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
+          {/* Mobile Search & Menu */}
+          <div className="flex md:hidden items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSearchOpen(true)}
+              data-testid="button-mobile-search"
+            >
+              <SearchIcon className="h-5 w-5" />
+            </Button>
+            <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  data-testid="button-mobile-menu"
+                >
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
             <SheetContent side="right" className="w-[280px] sm:w-[320px]">
               <div className="flex flex-col space-y-4 mt-8">
                 {[...navLinks, ...moreLinks].map((link) => (
@@ -188,6 +206,15 @@ export default function Navigation() {
               </div>
             </SheetContent>
           </Sheet>
+          </div>
+
+          {/* Mobile Search Dialog */}
+          <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+            <DialogContent className="sm:max-w-lg">
+              <DialogTitle className="sr-only">검색</DialogTitle>
+              <SearchBar onClose={() => setIsSearchOpen(false)} />
+            </DialogContent>
+          </Dialog>
         </div>
       </nav>
     </header>

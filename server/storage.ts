@@ -11,15 +11,27 @@ import {
   type InsertContact,
   type User,
   type UpsertUser,
+  type NewsletterSubscription,
+  type InsertNewsletterSubscription,
+  type Review,
+  type InsertReview,
+  type FaqEntry,
+  type InsertFaqEntry,
+  type MetricsSnapshot,
+  type InsertMetricsSnapshot,
   blogPosts,
   products,
   resources,
   services,
   contacts,
   users,
+  newsletterSubscriptions,
+  reviews,
+  faqEntries,
+  metricsSnapshots,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, ilike, or, and, asc } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -64,6 +76,32 @@ export interface IStorage {
   createContact(contact: InsertContact): Promise<Contact>;
   getAllContacts(): Promise<Contact[]>;
   deleteContact(id: string): Promise<void>;
+
+  // Newsletter
+  subscribeNewsletter(email: string, name: string): Promise<NewsletterSubscription>;
+  unsubscribeNewsletter(email: string): Promise<void>;
+  getNewsletterSubscribers(): Promise<NewsletterSubscription[]>;
+
+  // Reviews
+  createReview(data: InsertReview): Promise<Review>;
+  getReviewsByProduct(productId: string): Promise<Review[]>;
+  getAllReviews(): Promise<Review[]>;
+  updateReviewStatus(id: string, status: string): Promise<Review>;
+  deleteReview(id: string): Promise<void>;
+
+  // FAQ
+  createFaq(data: InsertFaqEntry): Promise<FaqEntry>;
+  getFaqs(): Promise<FaqEntry[]>;
+  getAllFaqs(): Promise<FaqEntry[]>;
+  updateFaq(id: string, data: Partial<InsertFaqEntry>): Promise<FaqEntry>;
+  deleteFaq(id: string): Promise<void>;
+
+  // Metrics
+  getMetrics(): Promise<MetricsSnapshot[]>;
+  updateMetric(name: string, value: number): Promise<MetricsSnapshot>;
+
+  // Search
+  searchContent(query: string, type?: string): Promise<{ blogs: BlogPost[], products: Product[] }>;
 }
 
 // Legacy MemStorage class - no longer used, removed for clarity
@@ -598,6 +636,149 @@ export class PgStorage implements IStorage {
 
   async deleteContact(id: string): Promise<void> {
     await db.delete(contacts).where(eq(contacts.id, id));
+  }
+
+  // Newsletter
+  async subscribeNewsletter(email: string, name: string): Promise<NewsletterSubscription> {
+    const results = await db
+      .insert(newsletterSubscriptions)
+      .values({ email, name, status: 'active' })
+      .onConflictDoUpdate({
+        target: newsletterSubscriptions.email,
+        set: { name, status: 'active', subscribedAt: new Date() },
+      })
+      .returning();
+    return results[0];
+  }
+
+  async unsubscribeNewsletter(email: string): Promise<void> {
+    await db
+      .update(newsletterSubscriptions)
+      .set({ status: 'unsubscribed' })
+      .where(eq(newsletterSubscriptions.email, email));
+  }
+
+  async getNewsletterSubscribers(): Promise<NewsletterSubscription[]> {
+    return await db.select().from(newsletterSubscriptions).orderBy(desc(newsletterSubscriptions.subscribedAt));
+  }
+
+  // Reviews
+  async createReview(data: InsertReview): Promise<Review> {
+    const results = await db.insert(reviews).values(data).returning();
+    return results[0];
+  }
+
+  async getReviewsByProduct(productId: string): Promise<Review[]> {
+    return await db
+      .select()
+      .from(reviews)
+      .where(and(eq(reviews.productId, productId), eq(reviews.status, 'approved')))
+      .orderBy(desc(reviews.createdAt));
+  }
+
+  async getAllReviews(): Promise<Review[]> {
+    return await db.select().from(reviews).orderBy(desc(reviews.createdAt));
+  }
+
+  async updateReviewStatus(id: string, status: string): Promise<Review> {
+    const results = await db
+      .update(reviews)
+      .set({ status })
+      .where(eq(reviews.id, id))
+      .returning();
+    return results[0];
+  }
+
+  async deleteReview(id: string): Promise<void> {
+    await db.delete(reviews).where(eq(reviews.id, id));
+  }
+
+  // FAQ
+  async createFaq(data: InsertFaqEntry): Promise<FaqEntry> {
+    const results = await db.insert(faqEntries).values(data).returning();
+    return results[0];
+  }
+
+  async getFaqs(): Promise<FaqEntry[]> {
+    return await db
+      .select()
+      .from(faqEntries)
+      .where(eq(faqEntries.status, 'published'))
+      .orderBy(asc(faqEntries.category), asc(faqEntries.displayOrder));
+  }
+
+  async getAllFaqs(): Promise<FaqEntry[]> {
+    return await db
+      .select()
+      .from(faqEntries)
+      .orderBy(asc(faqEntries.category), asc(faqEntries.displayOrder));
+  }
+
+  async updateFaq(id: string, data: Partial<InsertFaqEntry>): Promise<FaqEntry> {
+    const results = await db
+      .update(faqEntries)
+      .set(data)
+      .where(eq(faqEntries.id, id))
+      .returning();
+    return results[0];
+  }
+
+  async deleteFaq(id: string): Promise<void> {
+    await db.delete(faqEntries).where(eq(faqEntries.id, id));
+  }
+
+  // Metrics
+  async getMetrics(): Promise<MetricsSnapshot[]> {
+    return await db.select().from(metricsSnapshots).orderBy(asc(metricsSnapshots.name));
+  }
+
+  async updateMetric(name: string, value: number): Promise<MetricsSnapshot> {
+    const results = await db
+      .insert(metricsSnapshots)
+      .values({ name, value })
+      .onConflictDoUpdate({
+        target: metricsSnapshots.name,
+        set: { value, updatedAt: new Date() },
+      })
+      .returning();
+    return results[0];
+  }
+
+  // Search
+  async searchContent(query: string, type?: string): Promise<{ blogs: BlogPost[], products: Product[] }> {
+    const searchPattern = `%${query}%`;
+    
+    let blogs: BlogPost[] = [];
+    let productResults: Product[] = [];
+
+    if (!type || type === 'blog') {
+      blogs = await db
+        .select()
+        .from(blogPosts)
+        .where(
+          or(
+            ilike(blogPosts.title, searchPattern),
+            ilike(blogPosts.excerpt, searchPattern),
+            ilike(blogPosts.content, searchPattern)
+          )
+        )
+        .orderBy(desc(blogPosts.publishedAt));
+    }
+
+    if (!type || type === 'product') {
+      productResults = await db
+        .select()
+        .from(products)
+        .where(
+          or(
+            ilike(products.title, searchPattern),
+            ilike(products.description, searchPattern),
+            ilike(products.fullDescription, searchPattern)
+          )
+        );
+    }
+
+    return { blogs, products: productResults };
   }
 }
 

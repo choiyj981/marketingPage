@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
+import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -41,14 +42,14 @@ export default function Contact() {
       setIsSubmitted(true);
       form.reset();
       toast({
-        title: "Message sent successfully!",
-        description: "We'll get back to you as soon as possible.",
+        title: "메시지가 성공적으로 전송되었습니다!",
+        description: "빠른 시일 내에 답변드리겠습니다.",
       });
     },
     onError: (error: any) => {
       toast({
-        title: "Error sending message",
-        description: error.message || "Please try again later.",
+        title: "메시지 전송 실패",
+        description: error.message || "나중에 다시 시도해주세요.",
         variant: "destructive",
       });
     },
@@ -61,34 +62,39 @@ export default function Contact() {
   const contactInfo = [
     {
       icon: Mail,
-      title: "Email Us",
-      content: "contact@businessplatform.com",
-      href: "mailto:contact@businessplatform.com",
+      title: "이메일",
+      content: "contact@modooads.com",
+      href: "mailto:contact@modooads.com",
     },
     {
       icon: Phone,
-      title: "Call Us",
-      content: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
+      title: "전화",
+      content: "02-1234-5678",
+      href: "tel:+8221234 5678",
     },
     {
       icon: MapPin,
-      title: "Visit Us",
-      content: "123 Business Ave, Suite 100\nSan Francisco, CA 94105",
+      title: "오시는 길",
+      content: "서울시 강남구 테헤란로 123\n모두의광고 빌딩 5층",
       href: "#",
     },
   ];
 
   return (
     <div className="min-h-screen pt-24 pb-16">
+      <SEO
+        title="문의하기 - 광고 상담 신청 | 모두의광고"
+        description="광고 운영, 마케팅 전략에 대해 궁금하신 점이 있으신가요? 전문가가 직접 답변해드립니다. 1:1 맞춤 상담을 통해 귀사의 비즈니스에 최적화된 광고 전략을 제안받으세요."
+        keywords="광고 문의, 마케팅 상담, 광고 상담, 광고 전략 상담, 광고 대행 문의, 마케팅 컨설팅 문의"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-foreground mb-4">
-            Get in Touch
+          <h1 className="font-display font-bold text-4xl md:text-5xl lg:text-6xl text-foreground mb-4" data-testid="text-page-title">
+            문의하기
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-            Have a question or want to work together? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto" style={{ lineHeight: '1.8' }} data-testid="text-page-subtitle">
+            궁금하신 점이나 협업 제안이 있으신가요? 메시지를 보내주시면 빠르게 답변드리겠습니다.
           </p>
         </div>
 
@@ -103,17 +109,17 @@ export default function Contact() {
                       <Send className="h-8 w-8 text-success" />
                     </div>
                     <h3 className="font-semibold text-2xl mb-2" data-testid="text-success-title">
-                      Thank you for your message!
+                      메시지를 보내주셔서 감사합니다!
                     </h3>
-                    <p className="text-muted-foreground mb-6" data-testid="text-success-message">
-                      We've received your inquiry and will get back to you shortly.
+                    <p className="text-muted-foreground mb-6" style={{ lineHeight: '1.7' }} data-testid="text-success-message">
+                      문의 내용을 잘 받았습니다. 빠른 시일 내에 답변드리겠습니다.
                     </p>
                     <Button
                       variant="outline"
                       onClick={() => setIsSubmitted(false)}
                       data-testid="button-send-another"
                     >
-                      Send Another Message
+                      다른 메시지 보내기
                     </Button>
                   </div>
                 ) : (
@@ -125,10 +131,10 @@ export default function Contact() {
                           name="name"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Name *</FormLabel>
+                              <FormLabel>이름 *</FormLabel>
                               <FormControl>
                                 <Input
-                                  placeholder="Your name"
+                                  placeholder="이름을 입력하세요"
                                   {...field}
                                   data-testid="input-name"
                                 />
@@ -143,7 +149,7 @@ export default function Contact() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email *</FormLabel>
+                              <FormLabel>이메일 *</FormLabel>
                               <FormControl>
                                 <Input
                                   type="email"
@@ -163,10 +169,10 @@ export default function Contact() {
                         name="subject"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Subject *</FormLabel>
+                            <FormLabel>제목 *</FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="How can we help you?"
+                                placeholder="어떤 도움이 필요하신가요?"
                                 {...field}
                                 data-testid="input-subject"
                               />
@@ -181,10 +187,10 @@ export default function Contact() {
                         name="message"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Message *</FormLabel>
+                            <FormLabel>메시지 *</FormLabel>
                             <FormControl>
                               <Textarea
-                                placeholder="Tell us more about your inquiry..."
+                                placeholder="문의 내용을 자세히 입력해주세요..."
                                 rows={6}
                                 {...field}
                                 data-testid="input-message"
@@ -203,10 +209,10 @@ export default function Contact() {
                         data-testid="button-submit"
                       >
                         {mutation.isPending ? (
-                          "Sending..."
+                          "전송 중..."
                         ) : (
                           <>
-                            Send Message
+                            메시지 보내기
                             <Send className="h-4 w-4" />
                           </>
                         )}
@@ -221,7 +227,7 @@ export default function Contact() {
           {/* Contact Information */}
           <div className="space-y-6">
             <div>
-              <h2 className="font-semibold text-2xl mb-6">Contact Information</h2>
+              <h2 className="font-semibold text-2xl mb-6" data-testid="text-contact-info-title">연락처 정보</h2>
               <div className="space-y-4">
                 {contactInfo.map((item, index) => (
                   <Card key={index} className="hover:shadow-md transition-shadow">
@@ -238,12 +244,13 @@ export default function Contact() {
                             <a
                               href={item.href}
                               className="text-sm text-muted-foreground hover:text-primary transition-colors whitespace-pre-line"
+                              style={{ lineHeight: '1.7' }}
                               data-testid={`link-contact-${item.title.toLowerCase().replace(/\s+/g, '-')}`}
                             >
                               {item.content}
                             </a>
                           ) : (
-                            <p className="text-sm text-muted-foreground whitespace-pre-line" data-testid={`text-contact-${item.title.toLowerCase().replace(/\s+/g, '-')}`}>
+                            <p className="text-sm text-muted-foreground whitespace-pre-line" style={{ lineHeight: '1.7' }} data-testid={`text-contact-${item.title.toLowerCase().replace(/\s+/g, '-')}`}>
                               {item.content}
                             </p>
                           )}
@@ -258,19 +265,19 @@ export default function Contact() {
             {/* Business Hours */}
             <Card className="bg-primary/5 border-primary/20">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-lg mb-3">Business Hours</h3>
+                <h3 className="font-semibold text-lg mb-3" data-testid="text-business-hours-title">운영 시간</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Monday - Friday</span>
-                    <span className="font-medium">9:00 AM - 6:00 PM</span>
+                    <span className="text-muted-foreground">월요일 - 금요일</span>
+                    <span className="font-medium">오전 9:00 - 오후 6:00</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Saturday</span>
-                    <span className="font-medium">10:00 AM - 4:00 PM</span>
+                    <span className="text-muted-foreground">토요일</span>
+                    <span className="font-medium">오전 10:00 - 오후 4:00</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Sunday</span>
-                    <span className="font-medium">Closed</span>
+                    <span className="text-muted-foreground">일요일</span>
+                    <span className="font-medium">휴무</span>
                   </div>
                 </div>
               </CardContent>

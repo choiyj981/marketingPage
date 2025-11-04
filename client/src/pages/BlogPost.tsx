@@ -1,9 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, Link } from "wouter";
-import { ArrowLeft, Calendar, Clock, Share2 } from "lucide-react";
+import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import SEO from "@/components/SEO";
+import StructuredData from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import SocialShare from "@/components/SocialShare";
+import RelatedContent from "@/components/RelatedContent";
 import type { BlogPost } from "@shared/schema";
 
 export default function BlogPost() {
@@ -50,6 +54,23 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title={`${post.title} | 모두의광고 블로그`}
+        description={post.excerpt}
+        keywords={`${post.category}, 광고 블로그, 마케팅 전략, ${post.tags?.join(', ') || '광고 운영, 디지털 마케팅'}`}
+        image={post.imageUrl}
+        url={window.location.href}
+        type="article"
+      />
+      <StructuredData
+        type="blog"
+        title={post.title}
+        description={post.excerpt}
+        author={post.author}
+        publishedAt={post.publishedAt}
+        imageUrl={post.imageUrl}
+        url={window.location.href}
+      />
       {/* Back Button */}
       <div className="bg-background/95 backdrop-blur-sm border-b sticky top-16 z-40">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -66,7 +87,8 @@ export default function BlogPost() {
       <div className="relative h-[400px] md:h-[500px] overflow-hidden bg-muted">
         <img
           src={post.imageUrl}
-          alt={post.title}
+          alt={`${post.title} - ${post.category} 광고 마케팅 블로그 포스트`}
+          loading="lazy"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
@@ -110,10 +132,7 @@ export default function BlogPost() {
               </div>
             </div>
 
-            <Button variant="outline" size="sm" className="gap-2" data-testid="button-share">
-              <Share2 className="h-4 w-4" />
-              Share
-            </Button>
+            <SocialShare title={post.title} />
           </div>
 
           {/* Excerpt */}
@@ -132,6 +151,9 @@ export default function BlogPost() {
           </div>
         </div>
       </article>
+
+      {/* Related Content */}
+      <RelatedContent type="blog" currentId={post.id} tags={post.tags || []} />
     </div>
   );
 }

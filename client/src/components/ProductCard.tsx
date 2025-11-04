@@ -20,7 +20,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         {product.imageUrl && (
           <img
             src={product.imageUrl}
-            alt={product.title}
+            alt={`${product.title} - ${product.category} 광고 교육 프로그램 이미지`}
+            loading="lazy"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         )}

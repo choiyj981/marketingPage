@@ -16,6 +16,7 @@ export const blogPosts = pgTable("blog_posts", {
   publishedAt: text("published_at").notNull(),
   readTime: text("read_time").notNull(),
   featured: integer("featured").notNull().default(0),
+  tags: text("tags").array().notNull().default(sql`'{}'::text[]`),
 });
 
 export const products = pgTable("products", {
@@ -30,6 +31,7 @@ export const products = pgTable("products", {
   badge: text("badge"),
   featured: integer("featured").notNull().default(0),
   features: text("features").array().notNull(),
+  tags: text("tags").array().notNull().default(sql`'{}'::text[]`),
 });
 
 export const resources = pgTable("resources", {
@@ -89,6 +91,47 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Newsletter subscriptions
+export const newsletterSubscriptions = pgTable("newsletter_subscriptions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  email: text("email").notNull().unique(),
+  name: text("name").notNull(),
+  subscribedAt: timestamp("subscribed_at").notNull().defaultNow(),
+  status: text("status").notNull().default("active"),
+});
+
+// Product reviews
+export const reviews = pgTable("reviews", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  productId: varchar("product_id").notNull().references(() => products.id),
+  rating: integer("rating").notNull(),
+  title: text("title").notNull(),
+  body: text("body").notNull(),
+  authorName: text("author_name").notNull(),
+  authorEmail: text("author_email").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  status: text("status").notNull().default("pending"),
+});
+
+// FAQ entries
+export const faqEntries = pgTable("faq_entries", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  question: text("question").notNull(),
+  answer: text("answer").notNull(),
+  category: text("category").notNull(),
+  displayOrder: integer("display_order").notNull().default(0),
+  status: text("status").notNull().default("published"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Metrics snapshots
+export const metricsSnapshots = pgTable("metrics_snapshots", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull().unique(),
+  value: integer("value").notNull().default(0),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 export const insertBlogPostSchema = createInsertSchema(blogPosts).omit({
   id: true,
 });
@@ -115,6 +158,47 @@ export const insertContactSchema = createInsertSchema(contacts).omit({
   message: z.string().min(10, "Message must be at least 10 characters"),
 });
 
+export const insertNewsletterSubscriptionSchema = createInsertSchema(newsletterSubscriptions).omit({
+  id: true,
+  subscribedAt: true,
+}).extend({
+  email: z.string().email("Please enter a valid email address"),
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  status: z.enum(["active", "unsubscribed"]).optional(),
+});
+
+export const insertReviewSchema = createInsertSchema(reviews).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  productId: z.string().min(1, "Product ID is required"),
+  rating: z.number().int().min(1, "Rating must be at least 1").max(5, "Rating must be at most 5"),
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  body: z.string().min(10, "Review must be at least 10 characters"),
+  authorName: z.string().min(2, "Name must be at least 2 characters"),
+  authorEmail: z.string().email("Please enter a valid email address"),
+  status: z.enum(["pending", "approved", "rejected"]).optional(),
+});
+
+export const insertFaqEntrySchema = createInsertSchema(faqEntries).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  question: z.string().min(5, "Question must be at least 5 characters"),
+  answer: z.string().min(10, "Answer must be at least 10 characters"),
+  category: z.string().min(2, "Category must be at least 2 characters"),
+  displayOrder: z.number().int().min(0).optional(),
+  status: z.enum(["published", "draft"]).optional(),
+});
+
+export const insertMetricsSnapshotSchema = createInsertSchema(metricsSnapshots).omit({
+  id: true,
+  updatedAt: true,
+}).extend({
+  name: z.string().min(1, "Metric name is required"),
+  value: z.number().int().min(0, "Value must be a non-negative integer"),
+});
+
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type InsertBlogPost = z.infer<typeof insertBlogPostSchema>;
 
@@ -129,6 +213,18 @@ export type InsertService = z.infer<typeof insertServiceSchema>;
 
 export type Contact = typeof contacts.$inferSelect;
 export type InsertContact = z.infer<typeof insertContactSchema>;
+
+export type NewsletterSubscription = typeof newsletterSubscriptions.$inferSelect;
+export type InsertNewsletterSubscription = z.infer<typeof insertNewsletterSubscriptionSchema>;
+
+export type Review = typeof reviews.$inferSelect;
+export type InsertReview = z.infer<typeof insertReviewSchema>;
+
+export type FaqEntry = typeof faqEntries.$inferSelect;
+export type InsertFaqEntry = z.infer<typeof insertFaqEntrySchema>;
+
+export type MetricsSnapshot = typeof metricsSnapshots.$inferSelect;
+export type InsertMetricsSnapshot = z.infer<typeof insertMetricsSnapshotSchema>;
 
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;

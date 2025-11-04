@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { FileText, Package, FolderOpen, Wrench, Mail, Plus } from "lucide-react";
+import { FileText, Package, FolderOpen, Wrench, Mail, Plus, HelpCircle, Star, Users, BarChart3 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import type { BlogPost, Product, Resource, Service, Contact } from "@shared/schema";
+import type { BlogPost, Product, Resource, Service, Contact, FaqEntry, Review, NewsletterSubscription, MetricsSnapshot } from "@shared/schema";
 
 export default function Admin() {
   const { user } = useAuth();
@@ -14,6 +14,10 @@ export default function Admin() {
   const { data: resources } = useQuery<Resource[]>({ queryKey: ["/api/resources"] });
   const { data: services } = useQuery<Service[]>({ queryKey: ["/api/services"] });
   const { data: contacts } = useQuery<Contact[]>({ queryKey: ["/api/contacts"] });
+  const { data: faqs } = useQuery<FaqEntry[]>({ queryKey: ["/api/admin/faq"] });
+  const { data: reviews } = useQuery<Review[]>({ queryKey: ["/api/admin/reviews"] });
+  const { data: newsletters } = useQuery<NewsletterSubscription[]>({ queryKey: ["/api/admin/newsletter"] });
+  const { data: metrics } = useQuery<MetricsSnapshot[]>({ queryKey: ["/api/metrics"] });
 
   if (!user?.isAdmin) {
     return (
@@ -34,11 +38,15 @@ export default function Admin() {
   }
 
   const stats = [
-    { title: "블로그 포스트", count: blogPosts?.length || 0, icon: FileText, href: "/admin/blog" },
-    { title: "제품/강의", count: products?.length || 0, icon: Package, href: "/admin/products" },
-    { title: "자료실", count: resources?.length || 0, icon: FolderOpen, href: "/admin/resources" },
-    { title: "서비스", count: services?.length || 0, icon: Wrench, href: "/admin/services" },
-    { title: "문의사항", count: contacts?.length || 0, icon: Mail, href: "/admin/contacts" },
+    { title: "블로그 포스트", count: blogPosts?.length || 0, icon: FileText, href: "/admin/blog", hasNew: true },
+    { title: "제품/강의", count: products?.length || 0, icon: Package, href: "/admin/products", hasNew: true },
+    { title: "자료실", count: resources?.length || 0, icon: FolderOpen, href: "/admin/resources", hasNew: true },
+    { title: "서비스", count: services?.length || 0, icon: Wrench, href: "/admin/services", hasNew: true },
+    { title: "문의사항", count: contacts?.length || 0, icon: Mail, href: "/admin/contacts", hasNew: false },
+    { title: "FAQ 관리", count: faqs?.length || 0, icon: HelpCircle, href: "/admin/faq", hasNew: true },
+    { title: "리뷰 관리", count: reviews?.length || 0, icon: Star, href: "/admin/reviews", hasNew: false },
+    { title: "뉴스레터 구독자", count: newsletters?.length || 0, icon: Users, href: "/admin/newsletter", hasNew: false },
+    { title: "통계 관리", count: metrics?.length || 0, icon: BarChart3, href: "/admin/metrics", hasNew: false },
   ];
 
   return (
@@ -64,12 +72,14 @@ export default function Admin() {
                       관리
                     </Button>
                   </Link>
-                  <Link href={`${stat.href}/new`}>
-                    <Button size="sm" data-testid={`button-create-${stat.title}`}>
-                      <Plus className="h-4 w-4 mr-1" />
-                      추가
-                    </Button>
-                  </Link>
+                  {stat.hasNew && (
+                    <Link href={`${stat.href}/new`}>
+                      <Button size="sm" data-testid={`button-create-${stat.title}`}>
+                        <Plus className="h-4 w-4 mr-1" />
+                        추가
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </CardContent>
             </Card>

@@ -23,6 +23,12 @@ import AdminResourceForm from "@/pages/AdminResourceForm";
 import AdminServices from "@/pages/AdminServices";
 import AdminServiceForm from "@/pages/AdminServiceForm";
 import AdminContacts from "@/pages/AdminContacts";
+import AdminFaq from "@/pages/AdminFaq";
+import AdminFaqForm from "@/pages/AdminFaqForm";
+import AdminReviews from "@/pages/AdminReviews";
+import AdminNewsletter from "@/pages/AdminNewsletter";
+import AdminMetrics from "@/pages/AdminMetrics";
+import FAQ from "@/pages/FAQ";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -40,6 +46,7 @@ function Router() {
         <Route path="/resources" component={Resources} />
         <Route path="/services" component={Services} />
         <Route path="/contact" component={Contact} />
+        <Route path="/faq" component={FAQ} />
         <Route path="/admin" component={Admin} />
         <Route path="/admin/blog" component={AdminBlog} />
         <Route path="/admin/blog/new" component={AdminBlogForm} />
@@ -54,6 +61,12 @@ function Router() {
         <Route path="/admin/services/new" component={AdminServiceForm} />
         <Route path="/admin/services/:id/edit" component={AdminServiceForm} />
         <Route path="/admin/contacts" component={AdminContacts} />
+        <Route path="/admin/faq" component={AdminFaq} />
+        <Route path="/admin/faq/new" component={AdminFaqForm} />
+        <Route path="/admin/faq/:id/edit" component={AdminFaqForm} />
+        <Route path="/admin/reviews" component={AdminReviews} />
+        <Route path="/admin/newsletter" component={AdminNewsletter} />
+        <Route path="/admin/metrics" component={AdminMetrics} />
         <Route component={NotFound} />
       </Switch>
       {!isAdminRoute && <Footer />}
