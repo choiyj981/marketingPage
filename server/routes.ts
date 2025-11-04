@@ -1,6 +1,8 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { promises as fs } from "fs";
+import { resolve } from "path";
 import { 
   insertContactSchema, 
   insertBlogPostSchema, 
@@ -36,6 +38,76 @@ const isAdmin = async (req: any, res: Response, next: NextFunction) => {
     res.status(500).json({ error: "서버 오류가 발생했습니다" });
   }
 };
+
+// Helper function to get domain
+const getDomain = () => {
+  const replitDomains = process.env.REPLIT_DOMAINS;
+  if (replitDomains) {
+    const domains = replitDomains.split(' ');
+    return `https://${domains[0]}`;
+  }
+  return 'http://localhost:5000';
+};
+
+// Function to generate sitemap.xml content
+async function generateSitemap(): Promise<string> {
+  const domain = getDomain();
+  const currentDate = new Date().toISOString();
+
+  const blogPosts = await storage.getAllBlogPosts();
+  const products = await storage.getAllProducts();
+
+  const staticPages = [
+    { url: '/', lastmod: currentDate, changefreq: 'daily', priority: '1.0' },
+    { url: '/blog', lastmod: currentDate, changefreq: 'daily', priority: '0.8' },
+    { url: '/products', lastmod: currentDate, changefreq: 'daily', priority: '0.8' },
+    { url: '/services', lastmod: currentDate, changefreq: 'weekly', priority: '0.7' },
+    { url: '/resources', lastmod: currentDate, changefreq: 'weekly', priority: '0.6' },
+    { url: '/contact', lastmod: currentDate, changefreq: 'monthly', priority: '0.5' },
+    { url: '/faq', lastmod: currentDate, changefreq: 'monthly', priority: '0.6' },
+  ];
+
+  const blogUrls = blogPosts.map(post => ({
+    url: `/blog/${encodeURIComponent(post.slug)}`,
+    lastmod: post.publishedAt || currentDate,
+    changefreq: 'weekly',
+    priority: '0.8'
+  }));
+
+  const productUrls = products.map(product => ({
+    url: `/products/${encodeURIComponent(product.slug)}`,
+    lastmod: currentDate,
+    changefreq: 'weekly',
+    priority: '0.8'
+  }));
+
+  const allUrls = [...staticPages, ...blogUrls, ...productUrls];
+
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+  for (const page of allUrls) {
+    xml += '  <url>\n';
+    xml += `    <loc>${domain}${page.url}</loc>\n`;
+    xml += `    <lastmod>${typeof page.lastmod === 'string' ? page.lastmod.split('T')[0] : new Date(page.lastmod).toISOString().split('T')[0]}</lastmod>\n`;
+    xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
+    xml += `    <priority>${page.priority}</priority>\n`;
+    xml += '  </url>\n';
+  }
+
+  xml += '</urlset>';
+  return xml;
+}
+
+// Function to generate robots.txt content
+function generateRobotsTxt(): string {
+  const domain = getDomain();
+  return `User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: ${domain}/sitemap.xml`;
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
@@ -618,6 +690,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "검색에 실패했습니다" });
     }
   });
+
+  // Admin endpoint to regenerate SEO files
+  app.post("/api/admin/seo/regenerate", isAuthenticated, isAdmin, async (_req, res) => {
+    try {
+      const publicDir = resolve(import.meta.dirname, "..", "client", "public");
+      
+      const sitemapContent = await generateSitemap();
+      const robotsContent = generateRobotsTxt();
+      
+      await fs.writeFile(resolve(publicDir, "sitemap.xml"), sitemapContent, "utf-8");
+      await fs.writeFile(resolve(publicDir, "robots.txt"), robotsContent, "utf-8");
+      
+      res.json({ message: "SEO 파일이 성공적으로 생성되었습니다" });
+    } catch (error) {
+      console.error("Error regenerating SEO files:", error);
+      res.status(500).json({ error: "SEO 파일 생성에 실패했습니다" });
+    }
+  });
+
+  // Generate SEO files on server startup
+  (async () => {
+    try {
+      const publicDir = resolve(import.meta.dirname, "..", "client", "public");
+      
+      const sitemapContent = await generateSitemap();
+      const robotsContent = generateRobotsTxt();
+      
+      await fs.writeFile(resolve(publicDir, "sitemap.xml"), sitemapContent, "utf-8");
+      await fs.writeFile(resolve(publicDir, "robots.txt"), robotsContent, "utf-8");
+      
+      console.log("✓ SEO files generated successfully");
+    } catch (error) {
+      console.error("Error generating SEO files on startup:", error);
+    }
+  })();
 
   const httpServer = createServer(app);
   return httpServer;

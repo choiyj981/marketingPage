@@ -168,7 +168,19 @@ Preferred communication style: Simple, everyday language.
 - Database-driven content for dynamic pages
 - Image assets referenced via public URLs
 
-**SEO Considerations**:
+**SEO Implementation**:
+- **sitemap.xml**: Automatically generated XML sitemap at `/sitemap.xml`
+  - Includes all static pages (home, blog index, products index, services, resources, contact, FAQ)
+  - Dynamically includes all blog posts and products from database
+  - Uses REPLIT_DOMAINS environment variable for domain detection (falls back to localhost:5000)
+  - Korean URLs properly encoded with encodeURIComponent
+  - Includes <loc>, <lastmod>, <changefreq>, and <priority> for each URL
+  - Regenerated on server startup and via admin endpoint
+- **robots.txt**: Automatically generated at `/robots.txt`
+  - Allows all public pages
+  - Blocks /admin/ routes from search engines
+  - References sitemap.xml location
+- **Admin Endpoint**: `POST /api/admin/seo/regenerate` to update SEO files when content changes
 - Structured metadata in blog posts (excerpts, read time)
 - Slug-based URLs for all content types
 - Featured content flags for homepage prioritization
