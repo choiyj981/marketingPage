@@ -14,7 +14,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import SearchBar from "@/components/SearchBar";
 
 export default function Navigation() {
@@ -212,6 +212,9 @@ export default function Navigation() {
           <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
             <DialogContent className="sm:max-w-lg">
               <DialogTitle className="sr-only">검색</DialogTitle>
+              <DialogDescription className="sr-only">
+                블로그 포스트와 제품을 검색하세요
+              </DialogDescription>
               <SearchBar onClose={() => setIsSearchOpen(false)} />
             </DialogContent>
           </Dialog>

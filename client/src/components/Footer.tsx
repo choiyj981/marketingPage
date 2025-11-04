@@ -24,11 +24,7 @@ export default function Footer() {
 
   const subscribeMutation = useMutation({
     mutationFn: async (data: NewsletterForm) => {
-      return await apiRequest("/api/newsletter/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      return await apiRequest("POST", "/api/newsletter/subscribe", data);
     },
     onSuccess: () => {
       toast({

@@ -50,11 +50,7 @@ export default function ReviewSection({ productId }: ReviewSectionProps) {
 
   const createReviewMutation = useMutation({
     mutationFn: async (data: ReviewForm) => {
-      return await apiRequest("/api/reviews", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, productId }),
-      });
+      return await apiRequest("POST", "/api/reviews", { ...data, productId });
     },
     onSuccess: () => {
       toast({
