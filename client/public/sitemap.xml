@@ -1,87 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/</loc>
+    <loc>http://localhost:5000/</loc>
     <lastmod>2025-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/blog</loc>
+    <loc>http://localhost:5000/blog</loc>
     <lastmod>2025-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/products</loc>
+    <loc>http://localhost:5000/products</loc>
     <lastmod>2025-11-04</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/services</loc>
+    <loc>http://localhost:5000/services</loc>
     <lastmod>2025-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/resources</loc>
+    <loc>http://localhost:5000/resources</loc>
     <lastmod>2025-11-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/contact</loc>
+    <loc>http://localhost:5000/contact</loc>
     <lastmod>2025-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/faq</loc>
+    <loc>http://localhost:5000/faq</loc>
     <lastmod>2025-11-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/blog/chatgpt-blog-automation-guide</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/blog/personal-branding-success-story</loc>
-    <lastmod>2025-01-10</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/blog/blog-seo-optimization-guide</loc>
-    <lastmod>2025-01-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/blog/youtube-data-analysis-trends</loc>
-    <lastmod>2024-12-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/products/personal-branding-course-vol3</loc>
-    <lastmod>2025-11-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/products/blog-monetization-master</loc>
-    <lastmod>2025-11-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://041cdda1-1699-49c5-bd00-f40b4c16eb64-00-2w37f4kskpisp.janeway.replit.dev/products/ai-content-automation-package</loc>
-    <lastmod>2025-11-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
 </urlset>
