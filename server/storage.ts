@@ -35,7 +35,7 @@ import { eq, desc, ilike, or, and, asc } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
-  // Users (required for Replit Auth)
+  // Users (for local authentication)
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
@@ -482,7 +482,7 @@ export interface IStorage {
 
 // PostgreSQL-based storage implementation
 export class PgStorage implements IStorage {
-  // Users (required for Replit Auth)
+  // Users (for local authentication)
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
@@ -1055,5 +1055,9 @@ async function seedDatabase() {
 // Initialize PostgreSQL storage
 export const storage: IStorage = new PgStorage();
 
-// Seed database (runs async but doesn't block)
-seedDatabase().catch(console.error);
+// Seed database (runs async but doesn't block, only if DATABASE_URL is set)
+if (process.env.DATABASE_URL) {
+  seedDatabase().catch(console.error);
+} else {
+  console.log("⚠️  데이터베이스가 설정되지 않아 seed 작업을 건너뜁니다.");
+}

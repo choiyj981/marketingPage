@@ -2,7 +2,10 @@ import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { promises as fs } from "fs";
-import { resolve } from "path";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 import { 
   insertContactSchema, 
   insertBlogPostSchema, 
@@ -15,17 +18,17 @@ import {
   insertMetricsSnapshotSchema
 } from "@shared/schema";
 import { z } from "zod";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./auth";
 import { uploadImage, uploadFile } from "./upload";
 
 // Admin middleware - checks if user has isAdmin permission
 const isAdmin = async (req: any, res: Response, next: NextFunction) => {
   try {
-    if (!req.user || !req.user.claims || !req.user.claims.sub) {
+    if (!req.user || !req.user.id) {
       return res.status(401).json({ error: "인증이 필요합니다" });
     }
 
-    const userId = req.user.claims.sub;
+    const userId = req.user.id;
     const user = await storage.getUser(userId);
 
     if (!user || !user.isAdmin) {
@@ -41,10 +44,9 @@ const isAdmin = async (req: any, res: Response, next: NextFunction) => {
 
 // Helper function to get domain
 const getDomain = () => {
-  const replitDomains = process.env.REPLIT_DOMAINS;
-  if (replitDomains) {
-    const domains = replitDomains.split(' ');
-    return `https://${domains[0]}`;
+  const domain = process.env.DOMAIN || process.env.BASE_URL;
+  if (domain) {
+    return domain.startsWith('http') ? domain : `https://${domain}`;
   }
   return 'http://localhost:5000';
 };
@@ -116,12 +118,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth endpoints
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
-      res.json(user);
+      if (!user) {
+        return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
+      }
+      // Don't send password hash to client
+      const { passwordHash, ...userWithoutPassword } = user;
+      res.json(userWithoutPassword);
     } catch (error) {
       console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+      res.status(500).json({ message: "사용자 정보를 가져오는데 실패했습니다." });
     }
   });
 
@@ -694,7 +701,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Admin endpoint to regenerate SEO files
   app.post("/api/admin/seo/regenerate", isAuthenticated, isAdmin, async (_req, res) => {
     try {
-      const publicDir = resolve(import.meta.dirname, "..", "client", "public");
+      const publicDir = resolve(__dirname, "..", "client", "public");
       
       const sitemapContent = await generateSitemap();
       const robotsContent = generateRobotsTxt();
@@ -709,22 +716,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Generate SEO files on server startup
-  (async () => {
-    try {
-      const publicDir = resolve(import.meta.dirname, "..", "client", "public");
-      
-      const sitemapContent = await generateSitemap();
-      const robotsContent = generateRobotsTxt();
-      
-      await fs.writeFile(resolve(publicDir, "sitemap.xml"), sitemapContent, "utf-8");
-      await fs.writeFile(resolve(publicDir, "robots.txt"), robotsContent, "utf-8");
-      
-      console.log("✓ SEO files generated successfully");
-    } catch (error) {
-      console.error("Error generating SEO files on startup:", error);
-    }
-  })();
+  // Generate SEO files on server startup (only if database is available)
+  if (process.env.DATABASE_URL) {
+    (async () => {
+      try {
+        const publicDir = resolve(__dirname, "..", "client", "public");
+        
+        const sitemapContent = await generateSitemap();
+        const robotsContent = generateRobotsTxt();
+        
+        await fs.writeFile(resolve(publicDir, "sitemap.xml"), sitemapContent, "utf-8");
+        await fs.writeFile(resolve(publicDir, "robots.txt"), robotsContent, "utf-8");
+        
+        console.log("✓ SEO files generated successfully");
+      } catch (error) {
+        console.error("Error generating SEO files on startup:", error);
+      }
+    })();
+  } else {
+    console.log("⚠️  데이터베이스가 없어 SEO 파일 생성을 건너뜁니다.");
+  }
 
   const httpServer = createServer(app);
   return httpServer;
