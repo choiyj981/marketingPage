@@ -484,6 +484,13 @@ cat .env
 - 로컬 PostgreSQL 연결 성공
 - 서버 정상 실행 확인
 
+### 2024-12-XX (Google Cloud Run 배포)
+- Dockerfile 생성 (Cloud Run 배포용)
+- .dockerignore, .gcloudignore 파일 생성
+- GitHub에 푸시 완료
+- Cloud Run 서비스 생성: business-jun-site
+- URL: https://business-jun-site-466122825675.europe-west1.run.app
+
 ---
 
 **마지막 업데이트:** 2024년 12월 중순

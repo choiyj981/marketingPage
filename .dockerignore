@@ -3,7 +3,6 @@ dist
 .env
 .env.local
 .git
-.gitignore
 .DS_Store
 *.log
 npm-debug.log*
