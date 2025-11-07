@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>네이버 블로그 자동화 프로그램 - 하루 10분으로 블로그 성장 가속화</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px 120px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="none"/><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #fff;
+            color: #667eea;
+            padding: 20px 50px;
+            font-size: 1.3em;
+            font-weight: 700;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: -60px auto 0;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: 800;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        /* Problem Section */
+        .problem-section {
+            background: linear-gradient(to bottom, #fff 0%, #f8f9fa 100%);
+        }
+
+        .problems {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .problem-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #ff6b6b;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .problem-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .problem-card h3 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* Solution Box */
+        .solution-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
+        }
+
+        .solution-box h3 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .solution-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .solution-stat {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .solution-stat strong {
+            font-size: 2em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid #667eea;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #555;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: linear-gradient(to bottom, #f8f9fa 0%, #fff 100%);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            position: relative;
+        }
+
+        .step {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: 800;
+            margin: 0 auto 20px;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .step h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Scenarios */
+        .scenarios {
+            display: grid;
+            gap: 40px;
+        }
+
+        .scenario {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .scenario-info {
+            padding: 50px;
+        }
+
+        .scenario-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .scenario h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .scenario-results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-item {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item strong {
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Pricing */
+        .pricing {
+            background: linear-gradient(to bottom, #f8f9fa 0%, #fff 100%);
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .pricing-card.featured {
+            border-color: #667eea;
+            transform: scale(1.05);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .pricing-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 3em;
+            font-weight: 800;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .price span {
+            font-size: 0.4em;
+            color: #999;
+        }
+
+        .savings {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        /* FAQ */
+        .faq {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 25px 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f8f9fa;
+            transition: background 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            background: #e9ecef;
+        }
+
+        .faq-answer {
+            padding: 25px 30px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            opacity: 0.95;
+        }
+
+        .guarantee {
+            background: rgba(255,255,255,0.15);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 40px auto 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .guarantee-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2em;
+            }
+
+            .scenario {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title h2 {
+                font-size: 2em;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">⚡ 2025년 최신 버전</div>
+            <h1>하루 10분으로<br>블로그 성장 가속화</h1>
+            <p class="hero-subtitle">네이버 블로그 운영을 완전 자동화하는 올인원 솔루션</p>
+            <div>
+                <a href="#pricing" class="cta-button">지금 시작하기</a>
+                <a href="#features" class="cta-button secondary">더 알아보기</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-number">95%</div>
+            <div class="stat-label">시간 절감</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">하루 댓글 자동 작성</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">8개</div>
+            <div class="stat-label">계정 동시 관리</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">자동 운영</div>
+        </div>
+    </div>
+
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>이런 고민 있으신가요?</h2>
+                <p>블로그 운영자라면 누구나 겪는 문제들</p>
+            </div>
+
+            <div class="problems">
+                <div class="problem-card">
+                    <div class="problem-icon">⏰</div>
+                    <h3>시간이 부족해요</h3>
+                    <p>댓글 작성, 서로이웃 관리에 하루 3시간 이상 소모되고 있어요</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🔁</div>
+                    <h3>반복 작업이 지겨워요</h3>
+                    <p>매일 같은 작업을 수백 번 반복하는 게 너무 힘들어요</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">📉</div>
+                    <h3>성장이 정체됐어요</h3>
+                    <p>수동 운영으로는 한계가 있어 블로그가 성장하지 않아요</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">👥</div>
+                    <h3>다중 계정 관리가 어려워요</h3>
+                    <p>여러 블로그를 운영하는데 관리 부담이 너무 커요</p>
+                </div>
+            </div>
+
+            <div class="solution-box">
+                <h3>✨ 이 모든 문제를 한 번에 해결합니다</h3>
+                <p style="font-size: 1.2em; margin-top: 10px;">완전 자동화로 블로그 운영의 새로운 시대를 경험하세요</p>
+                
+                <div class="solution-stats">
+                    <div class="solution-stat">
+                        <strong>3시간 → 10분</strong>
+                        <div>일일 작업 시간</div>
+                    </div>
+                    <div class="solution-stat">
+                        <strong>월 100시간</strong>
+                        <div>시간 절감</div>
+                    </div>
+                    <div class="solution-stat">
+                        <strong>연 1,800만원</strong>
+                        <div>비용 절감 효과</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container" id="features">
+        <div class="section-title">
+            <h2>강력한 4가지 핵심 기능</h2>
+            <p>블로그 성장에 필요한 모든 것이 자동화됩니다</p>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>서로이웃 자동 신청</h3>
+                <p>키워드로 관련 블로그를 찾아 자동으로 서로이웃 신청</p>
+                <ul class="feature-list">
+                    <li>하루 수백 개 블로그 자동 검색</li>
+                    <li>중복 신청 자동 방지</li>
+                    <li>그룹 꽉 차면 자동 전환</li>
+                    <li>계정별 다른 키워드 설정</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>댓글 자동 작성</h3>
+                <p>이웃 블로그에 자연스러운 댓글을 자동으로 작성</p>
+                <ul class="feature-list">
+                    <li>하루 500개 이상 댓글 가능</li>
+                    <li>AI 기반 맞춤형 댓글 생성</li>
+                    <li>80개 템플릿 기본 제공</li>
+                    <li>중복 댓글 자동 방지</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👍</div>
+                <h3>공감 자동 클릭</h3>
+                <p>특정 블로그의 게시물에 자동으로 공감 클릭</p>
+                <ul class="feature-list">
+                    <li>페이지 범위 설정 가능</li>
+                    <li>중복 공감 자동 방지</li>
+                    <li>여러 계정 동시 실행</li>
+                    <li>파트너십 강화 지원</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⏰</div>
+                <h3>스케줄 자동 실행</h3>
+                <p>설정한 시간에 모든 기능을 자동으로 실행</p>
+                <ul class="feature-list">
+                    <li>요일별, 시간대별 설정</li>
+                    <li>여러 시간대 동시 설정</li>
+                    <li>백그라운드 자동 실행</li>
+                    <li>텔레그램 알림 기능</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>사용 방법은 정말 간단합니다</h2>
+                <p>5단계면 바로 시작할 수 있습니다</p>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>프로그램 실행</h3>
+                    <p>다운로드 후 더블클릭으로 즉시 실행</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>계정 추가</h3>
+                    <p>네이버 아이디와 비밀번호 입력</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>키워드 설정</h3>
+                    <p>내 블로그와 관련된 키워드 입력</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>스케줄 설정</h3>
+                    <p>실행 시간과 요일 선택 (선택사항)</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <h3>시작 버튼 클릭</h3>
+                    <p>이제 모든 것이 자동으로 진행됩니다!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scenarios -->
+    <section class="container">
+        <div class="section-title">
+            <h2>실제 성공 사례</h2>
+            <p>다양한 업종에서 검증된 효과</p>
+        </div>
+
+        <div class="scenarios">
+            <div class="scenario">
+                <div class="scenario-info">
+                    <div class="scenario-badge">부동산 업종</div>
+                    <h3>부산 중구 공인중개사</h3>
+                    <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">
+                        부산 중구 부동산 공인중개사가 블로그로 고객을 유치하기 위해 
+                        서로이웃 자동화와 댓글 자동화를 활용했습니다.
+                    </p>
+                    <p style="color: #666; line-height: 1.8;">
+                        <strong>설정:</strong><br>
+                        • 키워드: "부산중구, 중구부동산, 남포동"<br>
+                        • 하루 댓글: 50개<br>
+                        • 서로이웃: 하루 100명<br>
+                        • 스케줄: 평일 오전 9시, 오후 2시
+                    </p>
+                </div>
+                <div class="scenario-results">
+                    <h4 style="font-size: 1.5em; margin-bottom: 30px;">📈 1주일 후 결과</h4>
+                    <div class="result-item">
+                        <strong>+700명</strong>
+                        <span>서로이웃 증가</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>4배 증가</strong>
+                        <span>일평균 방문자 (50명 → 200명)</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>4배 증가</strong>
+                        <span>고객 문의 (주 2건 → 주 8건)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenario">
+                <div class="scenario-info">
+                    <div class="scenario-badge">교육 업종</div>
+                    <h3>온라인 토익 강사</h3>
+                    <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">
+                        온라인 토익 강사가 블로그로 학생을 모집하기 위해 
+                        AI 댓글 모드와 공감 자동화를 활용했습니다.
+                    </p>
+                    <p style="color: #666; line-height: 1.8;">
+                        <strong>설정:</strong><br>
+                        • 키워드: "토익, 토익 공부법, 토익 고득점"<br>
+                        • 하루 댓글: 30개 (AI 모드)<br>
+                        • 공감: 파트너 블로그 100개<br>
+                        • 스케줄: 매일 오전 8시, 저녁 9시
+                    </p>
+                </div>
+                <div class="scenario-results">
+                    <h4 style="font-size: 1.5em; margin-bottom: 30px;">📈 2주일 후 결과</h4>
+                    <div class="result-item">
+                        <strong>+300명</strong>
+                        <span>블로그 구독자 증가</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>하루 20개</strong>
+                        <span>댓글 반응 (자연스러운 교류)</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>3배 증가</strong>
+                        <span>수강생 유입 (월 10명 → 월 30명)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scenario">
+                <div class="scenario-info">
+                    <div class="scenario-badge">다중 계정 운영</div>
+                    <h3>5개 블로그 마케터</h3>
+                    <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">
+                        5개의 블로그를 동시에 운영하는 마케터가 
+                        다중 계정 관리 기능을 활용했습니다.
+                    </p>
+                    <p style="color: #666; line-height: 1.8;">
+                        <strong>설정:</strong><br>
+                        • 계정 1~3: 부동산 (각각 다른 기능)<br>
+                        • 계정 4: 교육 (서로이웃 + 댓글)<br>
+                        • 계정 5: 암호화폐 (댓글 자동화)
+                    </p>
+                </div>
+                <div class="scenario-results">
+                    <h4 style="font-size: 1.5em; margin-bottom: 30px;">📈 즉시 효과</h4>
+                    <div class="result-item">
+                        <strong>5개 계정</strong>
+                        <span>동시 관리 가능</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>90% 절감</strong>
+                        <span>작업 시간 (5시간 → 30분)</span>
+                    </div>
+                    <div class="result-item">
+                        <strong>각각 다른 전략</strong>
+                        <span>계정별 맞춤 운영</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>지금 시작하세요</h2>
+                <p>블로그 성장을 가속화할 완벽한 기회</p>
+            </div>
+
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3>베이직</h3>
+                    <div class="price">무료</div>
+                    <p style="color: #666; margin-bottom: 30px;">개인 사용자를 위한 기본 기능</p>
+                    <ul class="feature-list" style="text-align: left;">
+                        <li>서로이웃 자동 신청</li>
+                        <li>댓글 자동 작성 (고정 멘트)</li>
+                        <li>공감 자동 클릭</li>
+                        <li>스케줄 자동 실행</li>
+                        <li>1개 계정 지원</li>
+                        <li>80개 댓글 템플릿</li>
+                    </ul>
+                    <a href="#" class="cta-button secondary" style="margin-top: 30px; width: 100%; text-align: center;">다운로드</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">🔥 가장 인기</div>
+                    <h3>프로</h3>
+                    <div class="price">₩49,000<span>/월</span></div>
+                    <div class="savings">연간 결제 시 월 39,000원 (20% 할인)</div>
+                    <ul class="feature-list" style="text-align: left;">
+                        <li>베이직 기능 전체</li>
+                        <li><strong>AI 댓글 자동 생성</strong></li>
+                        <li><strong>최대 8개 계정 지원</strong></li>
+                        <li>텔레그램 알림</li>
+                        <li>우선 기술 지원</li>
+                        <li>월간 업데이트</li>
+                        <li>고급 통계 및 분석</li>
+                    </ul>
+                    <a href="#" class="cta-button" style="margin-top: 30px; width: 100%; text-align: center; color: #667eea; background: white;">지금 시작하기</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>비즈니스</h3>
+                    <div class="price">문의</div>
+                    <p style="color: #666; margin-bottom: 30px;">대량 계정 운영 및 맞춤 서비스</p>
+                    <ul class="feature-list" style="text-align: left;">
+                        <li>프로 기능 전체</li>
+                        <li><strong>무제한 계정 지원</strong></li>
+                        <li>전담 계정 매니저</li>
+                        <li>맞춤형 자동화 설정</li>
+                        <li>24/7 기술 지원</li>
+                        <li>API 접근 권한</li>
+                        <li>월간 컨설팅</li>
+                    </ul>
+                    <a href="#" class="cta-button secondary" style="margin-top: 30px; width: 100%; text-align: center;">문의하기</a>
+                </div>
+            </div>
+
+            <div class="solution-box" style="margin-top: 50px;">
+                <h3>💰 투자 대비 효과 (ROI)</h3>
+                <p style="font-size: 1.2em; margin: 20px 0;">직원 고용 대비 연간 1,800만원 절감 효과</p>
+                <div class="solution-stats">
+                    <div class="solution-stat">
+                        <strong>월 100시간</strong>
+                        <div>시간 절감</div>
+                    </div>
+                    <div class="solution-stat">
+                        <strong>연 1,200시간</strong>
+                        <div>총 절감 시간</div>
+                    </div>
+                    <div class="solution-stat">
+                        <strong>연 1,800만원</strong>
+                        <div>비용 절감 효과</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="container">
+        <div class="section-title">
+            <h2>자주 묻는 질문</h2>
+            <p>궁금하신 점을 해결해드립니다</p>
+        </div>
+
+        <div class="faq">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>프로그램이 네이버 정책을 위반하나요?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    아니요. 프로그램은 네이버가 제공하는 정상적인 기능만 사용합니다. 사람이 수동으로 하는 작업을 자동화한 것일 뿐이며, 
+                    자동 보호 기능이 내장되어 있어 과도한 사용을 방지합니다. 권장 사용량을 지키시면 안전하게 사용하실 수 있습니다.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>설치가 어렵나요? 컴퓨터를 잘 못 다루는데...</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    전혀 어렵지 않습니다! 실행 파일(.exe)을 더블클릭하면 바로 실행되며, 
+                    초기 설정은 10분이면 완료됩니다. 사용자 친화적인 인터페이스로 누구나 쉽게 사용할 수 있습니다.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>무료 버전과 유료 버전의 차이는 무엇인가요?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    무료 버전은 기본적인 자동화 기능(서로이웃, 댓글, 공감, 스케줄)을 1개 계정에서 사용할 수 있습니다. 
+                    유료 프로 버전은 AI 댓글 생성, 최대 8개 계정 관리, 텔레그램 알림, 우선 기술 지원 등의 고급 기능이 추가됩니다.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>하루에 얼마나 많은 작업을 할 수 있나요?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    기술적으로는 댓글 500개 이상, 서로이웃 200명 이상이 가능합니다. 
+                    하지만 안전한 운영을 위해 댓글 30~50개, 서로이웃 50~100명 정도를 권장합니다. 
+                    처음에는 소량으로 시작하여 점차 늘려가는 것이 좋습니다.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>환불이 가능한가요?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    네, 구매 후 7일 이내에 환불 요청을 하실 수 있습니다. 
+                    다만 무료 베이직 버전을 먼저 사용해보신 후 유료 버전을 구매하시는 것을 권장합니다.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>기술 지원은 어떻게 받나요?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    GitHub Issues 또는 이메일을 통해 문의하실 수 있습니다. 
+                    프로 버전 사용자는 우선 기술 지원을 받으실 수 있으며, 비즈니스 버전은 24/7 전담 지원을 제공합니다.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>지금 바로 블로그 성장을 시작하세요</h2>
+            <p>하루 10분 투자로 블로그 운영의 모든 것을 자동화하세요</p>
+            <div>
+                <a href="#pricing" class="cta-button">무료로 시작하기</a>
+                <a href="#pricing" class="cta-button secondary">프로 버전 구매</a>
+            </div>
+
+            <div class="guarantee">
+                <div class="guarantee-icon">🛡️</div>
+                <h3 style="margin-bottom: 10px;">100% 만족 보장</h3>
+                <p style="margin: 0;">7일 이내 환불 가능 • 안전한 자동화 • 지속적인 업데이트</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p style="font-size: 1.1em; margin-bottom: 20px;">네이버 블로그 자동화 프로그램</p>
+            <p style="color: #999; font-size: 0.9em;">
+                © 2025 All rights reserved.<br>
+                이 프로그램은 개인 사용 목적으로 제작되었습니다. 상업적 사용 시 개발자에게 문의하세요.
+            </p>
+            <div style="margin-top: 30px;">
+                <a href="#" style="color: #999; text-decoration: none; margin: 0 15px;">이용약관</a>
+                <a href="#" style="color: #999; text-decoration: none; margin: 0 15px;">개인정보처리방침</a>
+                <a href="#" style="color: #999; text-decoration: none; margin: 0 15px;">문의하기</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                const answer = item.querySelector('.faq-answer');
+                const isOpen = answer.style.display === 'block';
+                
+                // Close all answers
+                document.querySelectorAll('.faq-answer').forEach(a => a.style.display = 'none');
+                document.querySelectorAll('.faq-question span:last-child').forEach(s => s.textContent = '▼');
+                
+                // Toggle current answer
+                if (!isOpen) {
+                    answer.style.display = 'block';
+                    question.querySelector('span:last-child').textContent = '▲';
+                }
+            });
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Animation on Scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .step, .scenario, .pricing-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import SocialShare from "@/components/SocialShare";
 import ReviewSection from "@/components/ReviewSection";
 import RelatedContent from "@/components/RelatedContent";
+import NaverBlogProductPage from "@/components/NaverBlogProductPage";
 import type { Product } from "@shared/schema";
 
 export default function ProductDetail() {
@@ -49,6 +50,31 @@ export default function ProductDetail() {
             </Button>
           </Link>
         </div>
+      </div>
+    );
+  }
+
+  // Custom layout for naver-blog-automation product
+  if (slug === "naver-blog-automation") {
+    return (
+      <div className="min-h-screen">
+        <SEO
+          title={`${product.title} - 네이버 블로그 자동화 프로그램 | 모두의광고`}
+          description={product.description || product.fullDescription}
+          keywords={`네이버 블로그 자동화, 블로그 자동화 프로그램, 서로이웃 자동화, 댓글 자동 작성, ${product.tags?.join(', ') || '블로그 마케팅, 자동화 도구'}`}
+          image={product.imageUrl}
+          url={window.location.href}
+          type="product"
+        />
+        <StructuredData
+          type="product"
+          name={product.title}
+          description={product.description || product.fullDescription}
+          price={product.price}
+          imageUrl={product.imageUrl || ''}
+          url={window.location.href}
+        />
+        <NaverBlogProductPage product={product} />
       </div>
     );
   }

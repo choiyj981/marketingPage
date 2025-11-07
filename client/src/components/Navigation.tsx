@@ -138,14 +138,15 @@ export default function Navigation() {
                   </Button>
                 </>
               ) : (
-                <Button 
-                  variant="ghost"
-                  onClick={() => window.location.href = '/api/login'}
-                  data-testid="button-login"
-                >
-                  <User className="w-4 h-4 mr-2" />
-                  로그인
-                </Button>
+                <Link href="/login">
+                  <Button 
+                    variant="ghost"
+                    data-testid="button-login"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    로그인
+                  </Button>
+                </Link>
               )
             )}
             <Link href="/contact">

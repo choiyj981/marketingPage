@@ -1,13 +1,22 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { FileText, Package, FolderOpen, Wrench, Mail, Plus, HelpCircle, Star, Users, BarChart3 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import type { BlogPost, Product, Resource, Service, Contact, FaqEntry, Review, NewsletterSubscription, MetricsSnapshot } from "@shared/schema";
 
 export default function Admin() {
-  const { user } = useAuth();
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
+
+  // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      setLocation(`/login?redirect=${encodeURIComponent("/admin")}`);
+    }
+  }, [isLoading, isAuthenticated, setLocation]);
 
   const { data: blogPosts } = useQuery<BlogPost[]>({ queryKey: ["/api/blog"] });
   const { data: products } = useQuery<Product[]>({ queryKey: ["/api/products"] });
@@ -19,6 +28,20 @@ export default function Admin() {
   const { data: newsletters } = useQuery<NewsletterSubscription[]>({ queryKey: ["/api/admin/newsletter"] });
   const { data: metrics } = useQuery<MetricsSnapshot[]>({ queryKey: ["/api/metrics"] });
 
+  // 로딩 중이거나 로그인하지 않은 경우
+  if (isLoading || !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">로딩 중...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // 관리자 권한이 없는 경우
   if (!user?.isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -27,10 +50,15 @@ export default function Admin() {
             <CardTitle>접근 권한 없음</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">관리자 권한이 필요합니다.</p>
-            <Link href="/">
-              <Button className="mt-4">홈으로 돌아가기</Button>
-            </Link>
+            <p className="text-muted-foreground mb-4">관리자 권한이 필요합니다.</p>
+            <div className="flex gap-2">
+              <Link href="/login">
+                <Button>로그인하기</Button>
+              </Link>
+              <Link href="/">
+                <Button variant="outline">홈으로 돌아가기</Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>

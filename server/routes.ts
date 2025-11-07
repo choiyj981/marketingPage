@@ -18,6 +18,7 @@ import {
   insertMetricsSnapshotSchema
 } from "@shared/schema";
 import { z } from "zod";
+import bcrypt from "bcrypt";
 import { setupAuth, isAuthenticated } from "./auth";
 import { uploadImage, uploadFile } from "./upload";
 
@@ -129,6 +130,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "사용자 정보를 가져오는데 실패했습니다." });
+    }
+  });
+
+  // Admin account creation endpoint (development only)
+  app.post("/api/admin/create-admin", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({ message: "이메일과 비밀번호를 입력해주세요." });
+      }
+
+      if (password.length < 8) {
+        return res.status(400).json({ message: "비밀번호는 최소 8자 이상이어야 합니다." });
+      }
+
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        // 기존 사용자가 있으면 관리자 권한만 부여
+        const updatedUser = await storage.upsertUser({
+          ...existingUser,
+          isAdmin: true,
+        });
+        const { passwordHash: _, ...userWithoutPassword } = updatedUser;
+        return res.json({ 
+          message: "기존 계정에 관리자 권한이 부여되었습니다.", 
+          user: userWithoutPassword 
+        });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 10);
+      const adminUser = await storage.upsertUser({
+        email,
+        passwordHash,
+        firstName: "Admin",
+        lastName: "User",
+        isAdmin: true,
+      });
+
+      const { passwordHash: __, ...userWithoutPassword } = adminUser;
+      res.status(201).json({ 
+        message: "관리자 계정이 생성되었습니다.", 
+        user: userWithoutPassword 
+      });
+    } catch (error) {
+      console.error("Admin creation error:", error);
+      res.status(500).json({ message: "관리자 계정 생성 중 오류가 발생했습니다." });
     }
   });
 
