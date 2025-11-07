@@ -15,4 +15,5 @@ coverage
 *.swp
 *.swo
 *~
-
+public/uploads
+attached_assets

@@ -10,16 +10,30 @@
 1. **로컬 PostgreSQL** - Docker 또는 로컬 설치
    - 자세한 내용: [LEARNING.md](./LEARNING.md)
 
-2. **EC2 내부 PostgreSQL** - AWS EC2 인스턴스에서 PostgreSQL 설치 및 연결
-   - 자세한 내용: [EC2_POSTGRESQL_SETUP.md](./EC2_POSTGRESQL_SETUP.md)
-
-3. **Neon (Cloud)** - 클라우드 PostgreSQL 서비스
-   - 자세한 내용: [replit.md](./replit.md)
-
-4. **GCP Cloud SQL** - Google Cloud Platform의 관리형 PostgreSQL
+2. **GCP Cloud SQL** - Google Cloud Platform의 관리형 PostgreSQL
    - 자세한 내용: [GCP_CLOUD_SQL_SETUP.md](./GCP_CLOUD_SQL_SETUP.md)
 
+3. **Docker Compose** - Docker를 사용한 전체 환경 구성 (로컬 + 서버)
+   - 로컬 실행: [DOCKER_LOCAL.md](./DOCKER_LOCAL.md)
+   - 서버 배포: [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+
 ### 빠른 시작
+
+#### Docker를 사용한 로컬 실행 (권장)
+
+```bash
+# 프로덕션 모드
+docker-compose up -d
+docker-compose exec app npm run db:push
+# http://localhost:8080 접속
+
+# 개발 모드 (핫 리로드)
+docker-compose -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.dev.yml exec app npm run db:push
+# http://localhost:5000 접속
+```
+
+#### 일반 방법
 
 1. `.env` 파일 생성:
    ```env
