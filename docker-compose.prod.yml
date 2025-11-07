@@ -18,9 +18,8 @@ services:
     restart: unless-stopped
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # Docker Hub에서 이미지 가져오기 (서버에서 빌드하지 않음)
+    image: docckerchoi/marketingpage:latest
     container_name: marketingpage-app
     environment:
       DATABASE_URL: postgresql://choiyj981:981749@postgres:5432/marketingpage
