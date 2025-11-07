@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import Hero from "@/components/Hero";
@@ -8,10 +9,13 @@ import SEO from "@/components/SEO";
 import StructuredData from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Zap, Shield, TrendingUp, Users, Download, Award, Target } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ArrowRight, Zap, Shield, TrendingUp, Users, Download, Award, Target, Info } from "lucide-react";
 import type { BlogPost, Product, Service, MetricsSnapshot } from "@shared/schema";
 
 export default function Home() {
+  const [versionDialogOpen, setVersionDialogOpen] = useState(false);
+  
   const { data: posts = [], isLoading: postsLoading } = useQuery<BlogPost[]>({
     queryKey: ["/api/blog"],
   });
@@ -304,6 +308,49 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Version Info Button - Fixed bottom right */}
+      <Dialog open={versionDialogOpen} onOpenChange={setVersionDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="fixed bottom-4 right-4 z-50 h-8 w-8 p-0 rounded-full shadow-lg hover:shadow-xl transition-all"
+            aria-label="버전 정보"
+          >
+            <Info className="h-4 w-4" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>버전 정보</DialogTitle>
+            <DialogDescription>
+              애플리케이션 버전 및 빌드 정보
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-muted-foreground">버전</span>
+                <span className="text-sm font-mono">1.0.0</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-muted-foreground">빌드 날짜</span>
+                <span className="text-sm font-mono">{new Date().toLocaleDateString('ko-KR')}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-muted-foreground">환경</span>
+                <span className="text-sm font-mono">{import.meta.env.MODE || 'production'}</span>
+              </div>
+            </div>
+            <div className="pt-4 border-t">
+              <p className="text-xs text-muted-foreground text-center">
+                © 2025 오토마케터. All rights reserved.
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
