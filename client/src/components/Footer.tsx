@@ -149,7 +149,9 @@ export default function Footer() {
           {/* Version Info */}
           <div className="mt-4 pt-4 border-t">
             <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
-              <span className="font-mono">v1.0.0</span>
+              <span className="font-mono">
+                v{import.meta.env.VITE_VERSION || import.meta.env.VITE_BUILD_TIME || '1.0.0'}
+              </span>
               <span className="hidden sm:inline">•</span>
               <span className="font-mono">
                 {import.meta.env.VITE_BUILD_TIME || (() => {

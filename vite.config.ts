@@ -52,8 +52,9 @@ export default defineConfig({
     react(),
   ],
   define: {
-    // Git 커밋 시간을 빌드 시점에 주입
+    // Git 커밋 시간을 빌드 시점에 주입 (버전 및 배포 시간으로 사용)
     'import.meta.env.VITE_BUILD_TIME': JSON.stringify(getGitCommitTime()),
+    'import.meta.env.VITE_VERSION': JSON.stringify(getGitCommitTime()), // 버전도 커밋 시간으로 설정
   },
   resolve: {
     alias: {
