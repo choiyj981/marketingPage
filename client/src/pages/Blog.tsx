@@ -33,7 +33,7 @@ export default function Blog() {
   return (
     <div className="min-h-screen pt-24 pb-16">
       <SEO
-        title="광고 마케팅 블로그 - 최신 광고 트렌드와 실전 전략 | 모두의광고"
+        title="광고 마케팅 블로그 - 최신 광고 트렌드와 실전 전략 | 오토마케터"
         description="광고 운영에 필요한 모든 정보를 제공합니다. 페이스북 광고, 구글 애즈, SNS 마케팅 등 최신 디지털 광고 트렌드와 실전 전략을 확인하세요."
         keywords="광고 블로그, 마케팅 블로그, 페이스북 광고 팁, 구글 애즈 가이드, SNS 마케팅, 디지털 광고 트렌드, 광고 전략, 퍼포먼스 마케팅"
       />

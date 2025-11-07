@@ -136,7 +136,7 @@ export default function Footer() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                 </svg>
               </div>
-              <span className="font-display font-bold text-xl bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">모두의광고</span>
+              <span className="font-display font-bold text-xl bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">오토마케터</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               효과적인 광고 솔루션과 마케팅 전략을 제공하는 프리미엄 플랫폼입니다.
@@ -215,7 +215,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-muted-foreground text-center md:text-left">
-              © {new Date().getFullYear()} 알파GOGOGO. All rights reserved.
+              © {new Date().getFullYear()} 오토마케터. All rights reserved.
             </p>
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Mail className="h-4 w-4" />

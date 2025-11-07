@@ -85,14 +85,14 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <SEO 
-        title="모두의광고 - 광고 & 마케팅 전문 플랫폼 | 광고 교육 & 컨설팅"
+        title="오토마케터 - 광고 & 마케팅 전문 플랫폼 | 광고 교육 & 컨설팅"
         description="비즈니스 성장을 위한 효과적인 광고 솔루션과 마케팅 전략. 전문적인 광고 교육, 마케팅 자료, 컨설팅 서비스를 제공합니다. 페이스북 광고, 구글 애즈 전문가와 함께하세요."
         keywords="광고 운영, 페이스북 광고, 구글 애즈, 마케팅 교육, 광고 강의, 디지털 마케팅, 온라인 광고, 광고 컨설팅, 광고 대행, SNS 마케팅, 퍼포먼스 마케팅"
       />
       <StructuredData type="organization" />
       {/* Hero Section */}
       <Hero
-        badge="모두의광고에 오신 것을 환영합니다"
+        badge="오토마케터에 오신 것을 환영합니다"
         title="효과적인 광고 솔루션과 마케팅 전략"
         subtitle="비즈니스 성장을 위한 전문적인 광고 교육, 마케팅 자료, 컨설팅 서비스를 제공합니다."
         primaryCTA={{ text: "시작하기", href: "/contact" }}
@@ -142,7 +142,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-foreground mb-4" data-testid="text-features-title">
-              왜 모두의광고인가?
+              왜 오토마케터인가?
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto" style={{ lineHeight: '1.8' }} data-testid="text-features-subtitle">
               검증된 광고 전략과 실전 노하우를 제공합니다
@@ -287,7 +287,7 @@ export default function Home() {
             지금 바로 시작하세요
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground mb-10" style={{ lineHeight: '1.8' }} data-testid="text-cta-subtitle">
-            수천 개의 기업이 이미 모두의광고와 함께 성공적인 광고 캠페인을 운영하고 있습니다.
+            수천 개의 기업이 이미 오토마케터와 함께 성공적인 광고 캠페인을 운영하고 있습니다.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/contact">

@@ -67,7 +67,7 @@ export default function Navigation() {
               </svg>
             </div>
             <span className="font-display font-bold text-lg md:text-xl bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              모두의광고
+              오토마케터
             </span>
           </Link>
 

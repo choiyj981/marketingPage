@@ -59,7 +59,7 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen">
         <SEO
-          title={`${product.title} - 네이버 블로그 자동화 프로그램 | 모두의광고`}
+          title={`${product.title} - 네이버 블로그 자동화 프로그램 | 오토마케터`}
           description={product.description || product.fullDescription}
           keywords={`네이버 블로그 자동화, 블로그 자동화 프로그램, 서로이웃 자동화, 댓글 자동 작성, ${product.tags?.join(', ') || '블로그 마케팅, 자동화 도구'}`}
           image={product.imageUrl}
@@ -82,7 +82,7 @@ export default function ProductDetail() {
   return (
     <div className="min-h-screen">
       <SEO
-        title={`${product.title} - 광고 교육 | 모두의광고`}
+        title={`${product.title} - 광고 교육 | 오토마케터`}
         description={product.description || product.fullDescription}
         keywords={`${product.category}, 광고 교육, 광고 강의, ${product.tags?.join(', ') || '마케팅 교육, 디지털 광고'}`}
         image={product.imageUrl}

@@ -55,7 +55,7 @@ export default function BlogPost() {
   return (
     <div className="min-h-screen">
       <SEO
-        title={`${post.title} | 모두의광고 블로그`}
+        title={`${post.title} | 오토마케터 블로그`}
         description={post.excerpt}
         keywords={`${post.category}, 광고 블로그, 마케팅 전략, ${post.tags?.join(', ') || '광고 운영, 디지털 마케팅'}`}
         image={post.imageUrl}

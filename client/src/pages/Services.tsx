@@ -15,7 +15,7 @@ export default function Services() {
   return (
     <div className="min-h-screen pt-24 pb-16">
       <SEO
-        title="광고 컨설팅 서비스 - 전문가 1:1 맞춤 전략 | 모두의광고"
+        title="광고 컨설팅 서비스 - 전문가 1:1 맞춤 전략 | 오토마케터"
         description="전문가의 1:1 맞춤형 광고 컨설팅과 전략 수립. 페이스북 광고, 구글 애즈, SNS 마케팅 등 귀사의 비즈니스에 최적화된 광고 전략을 제공합니다."
         keywords="광고 컨설팅, 마케팅 컨설팅, 광고 대행, 페이스북 광고 대행, 구글 애즈 대행, SNS 마케팅 대행, 광고 전략 수립, 맞춤 광고 전략"
       />

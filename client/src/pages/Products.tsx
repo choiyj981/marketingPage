@@ -24,7 +24,7 @@ export default function Products() {
   return (
     <div className="min-h-screen pt-24 pb-16">
       <SEO
-        title="광고 교육 프로그램 & 디지털 제품 | 모두의광고"
+        title="광고 교육 프로그램 & 디지털 제품 | 오토마케터"
         description="체계적인 광고 교육과 실전 마케팅 자료. 페이스북 광고 강의, 구글 애즈 교육, SNS 마케팅 과정 등 전문 광고 교육 프로그램을 만나보세요."
         keywords="광고 교육, 광고 강의, 마케팅 교육, 페이스북 광고 강의, 구글 애즈 교육, SNS 마케팅 과정, 디지털 마케팅 교육, 온라인 광고 교육"
       />

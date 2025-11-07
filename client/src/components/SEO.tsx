@@ -10,7 +10,7 @@ interface SEOProps {
 }
 
 export default function SEO({
-  title = "모두의광고",
+  title = "오토마케터",
   description = "효과적인 광고 솔루션과 마케팅 전략을 제공하는 프리미엄 플랫폼",
   keywords = "광고 운영, 페이스북 광고, 구글 애즈, 마케팅 교육, 광고 강의, 디지털 마케팅, 온라인 광고, 광고 컨설팅, 광고 대행",
   image = "/og-image.png",
@@ -45,7 +45,7 @@ export default function SEO({
     updateMetaTag('meta[property="og:image"]', "content", image);
     updateMetaTag('meta[property="og:url"]', "content", url || window.location.href);
     updateMetaTag('meta[property="og:type"]', "content", type);
-    updateMetaTag('meta[property="og:site_name"]', "content", "모두의광고");
+    updateMetaTag('meta[property="og:site_name"]', "content", "오토마케터");
 
     // Twitter Card meta tags
     updateMetaTag('meta[name="twitter:card"]', "content", "summary_large_image");
@@ -56,7 +56,7 @@ export default function SEO({
     // Additional SEO tags
     updateMetaTag('meta[name="robots"]', "content", "index, follow");
     updateMetaTag('meta[name="language"]', "content", "Korean");
-    updateMetaTag('meta[name="author"]', "content", "모두의광고");
+    updateMetaTag('meta[name="author"]', "content", "준");
   }, [title, description, keywords, image, url, type]);
 
   return null;

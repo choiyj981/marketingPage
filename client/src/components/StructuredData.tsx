@@ -46,7 +46,7 @@ export default function StructuredData(props: StructuredDataProps) {
         schema = {
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "모두의광고",
+          name: "오토마케터",
           description: "효과적인 광고 솔루션과 마케팅 전략을 제공하는 프리미엄 플랫폼",
           url: window.location.origin,
           logo: `${window.location.origin}/favicon.png`,
@@ -74,7 +74,7 @@ export default function StructuredData(props: StructuredDataProps) {
           },
           publisher: {
             "@type": "Organization",
-            name: "모두의광고",
+            name: "오토마케터",
             logo: {
               "@type": "ImageObject",
               url: `${window.location.origin}/favicon.png`,

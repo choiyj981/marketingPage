@@ -1,4 +1,4 @@
-# Design Guidelines: 모두의광고 (Everyone's Advertising)
+# Design Guidelines: 오토마케터 (AutoMarketer)
 
 ## Design Approach
 

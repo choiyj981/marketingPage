@@ -111,7 +111,7 @@ export default function Login() {
   return (
     <div className="min-h-screen pt-24 pb-16 flex items-center justify-center bg-muted/30">
       <SEO
-        title="로그인 - 관리자 페이지 | 모두의광고"
+        title="로그인 - 관리자 페이지 | 오토마케터"
         description="관리자 페이지에 로그인하여 콘텐츠를 관리하세요."
         keywords="로그인, 관리자 로그인"
       />
