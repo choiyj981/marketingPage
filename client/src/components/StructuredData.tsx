@@ -122,7 +122,7 @@ export default function StructuredData(props: StructuredDataProps) {
     }
 
     // Create or update script tag
-    let scriptTag = document.getElementById("structured-data");
+    let scriptTag = document.getElementById("structured-data") as HTMLScriptElement | null;
     if (!scriptTag) {
       scriptTag = document.createElement("script");
       scriptTag.id = "structured-data";

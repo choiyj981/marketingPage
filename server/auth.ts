@@ -97,14 +97,14 @@ export async function setupAuth(app: Express) {
 
   // Login endpoint
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("local", (err: Error | null, user: User | false, info?: { message?: string }) => {
       if (err) {
         return res.status(500).json({ message: "서버 오류가 발생했습니다." });
       }
       if (!user) {
         return res.status(401).json({ message: info?.message || "인증에 실패했습니다." });
       }
-      req.logIn(user, (err) => {
+      req.logIn(user, (err: Error | null) => {
         if (err) {
           return res.status(500).json({ message: "로그인 중 오류가 발생했습니다." });
         }
