@@ -18,18 +18,33 @@ jobs:
     - name: SSH 키 설정
       run: |
         mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+        
+        # SSH 개인 키 저장 (여러 줄 지원)
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
         chmod 600 ~/.ssh/id_ed25519
+        
+        # SSH 키 형식 확인
+        echo "SSH 키 파일 확인:"
+        head -n 1 ~/.ssh/id_ed25519
+        
+        # 서버 호스트 키 추가
         ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+        chmod 644 ~/.ssh/known_hosts
+    
+    - name: SSH 연결 테스트
+      run: |
+        echo "SSH 연결 테스트 중..."
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} echo "SSH 연결 성공!"
     
     - name: 서버에 배포
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -o BatchMode=yes ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
           echo "🚀 배포 시작..."
           
           # 프로젝트 디렉토리로 이동
-          cd ~/marketingPage
+          cd ~/marketingPage || cd ~/marketingpage || { echo "프로젝트 디렉토리를 찾을 수 없습니다!"; exit 1; }
           
           # Git에서 최신 코드 가져오기
           echo "📥 최신 코드 가져오기..."
