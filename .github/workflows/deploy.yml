@@ -62,12 +62,24 @@ jobs:
           
           # Docker 이미지 재빌드 및 재시작
           echo "🐳 Docker 이미지 빌드 중..."
-          docker-compose -f docker-compose.prod.yml build --no-cache 2>&1 | tee /tmp/build.log || {
-            echo "❌ 빌드 실패!"
-            cat /tmp/build.log
+          echo "빌드 시작 시간: $(date)"
+          
+          # 빌드 실행 (타임아웃 15분 설정)
+          timeout 900 docker-compose -f docker-compose.prod.yml build --no-cache --progress=plain 2>&1 | tee /tmp/build.log || {
+            BUILD_EXIT_CODE=$?
+            echo ""
+            echo "❌ 빌드 실패! (종료 코드: $BUILD_EXIT_CODE)"
+            echo "빌드 실패 시간: $(date)"
+            echo ""
+            echo "=== 빌드 로그 (마지막 50줄) ==="
+            tail -50 /tmp/build.log || cat /tmp/build.log
+            echo ""
             exit 1
           }
+          
+          echo ""
           echo "✅ 빌드 완료!"
+          echo "빌드 완료 시간: $(date)"
           echo "🐳 Docker 컨테이너 재시작..."
           docker-compose -f docker-compose.prod.yml up -d || {
             echo "❌ 컨테이너 시작 실패!"
