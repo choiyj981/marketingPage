@@ -1,24 +1,24 @@
 services:
-  # PostgreSQL 데이터베이스 컨테이너
-  postgres:
-    image: postgres:15-alpine
-    container_name: marketingpage-db
-    environment:
-      POSTGRES_USER: choiyj981
-      POSTGRES_PASSWORD: 981749
-      POSTGRES_DB: marketingpage
-    ports:
-      - "5432:5432"  # 로컬에서도 접근 가능하도록 포트 매핑
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U choiyj981 -d marketingpage"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - app-network
-    restart: unless-stopped
+  # PostgreSQL 데이터베이스 컨테이너 (서버 DB 사용으로 주석 처리)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: marketingpage-db
+  #   environment:
+  #     POSTGRES_USER: choiyj981
+  #     POSTGRES_PASSWORD: 981749
+  #     POSTGRES_DB: marketingpage
+  #   ports:
+  #     - "5432:5432"  # 로컬에서도 접근 가능하도록 포트 매핑
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U choiyj981 -d marketingpage"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
 
   # 애플리케이션 서버 컨테이너
   # 로컬에서 빌드하여 실행합니다
@@ -28,31 +28,27 @@ services:
       dockerfile: Dockerfile
     container_name: marketingpage-app
     environment:
-      # Docker 네트워크 내에서는 서비스 이름으로 접근 가능
-      DATABASE_URL: postgresql://choiyj981:981749@postgres:5432/marketingpage
+      # 서버의 PostgreSQL 사용 (34.73.27.245는 서버의 외부 IP)
+      DATABASE_URL: postgresql://choiyj981:981749@34.73.27.245:5432/marketingpage
       SESSION_SECRET: ${SESSION_SECRET:-dev-secret-key-change-in-production}
       PORT: 8080
       NODE_ENV: ${NODE_ENV:-production}
     ports:
       - "5000:8080"  # 외부 포트를 5000으로 변경 (8080이 사용 중인 경우)
-    depends_on:
-      postgres:
-        condition: service_healthy  # PostgreSQL이 준비될 때까지 대기
+    # depends_on 제거 (서버 DB 사용으로 로컬 postgres 의존성 없음)
     volumes:
       # 업로드된 파일 영구 저장
       - ./public/uploads:/app/public/uploads
-    networks:
-      - app-network
     restart: unless-stopped
 
-volumes:
-  postgres_data:
-    # 데이터베이스 데이터 영구 저장
+# volumes:
+#   postgres_data:
+#     # 데이터베이스 데이터 영구 저장 (서버 DB 사용으로 불필요)
 
-networks:
-  app-network:
-    driver: bridge
-    # 같은 네트워크의 컨테이너들은 서비스 이름으로 통신 가능
+# networks:
+#   app-network:
+#     driver: bridge
+#     # 서버 DB 사용으로 네트워크 불필요
 
 name: marketingpage
 

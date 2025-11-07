@@ -6,5 +6,6 @@ vite.config.ts.*
 *.tar.gz
 .env
 .env.local
-local_backup.sql
-*.sql
+# 임시로 백업 파일 업로드 (다운로드 후 삭제 예정)
+# local_backup.sql
+# *.sql
