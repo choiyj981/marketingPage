@@ -28,6 +28,7 @@ export default function AdminProductForm() {
   const [, params] = useRoute("/admin/products/:id/edit");
   const isEditing = !!params?.id;
   const [imageUploading, setImageUploading] = useState(false);
+  const [fileUploading, setFileUploading] = useState(false);
   const [featureInput, setFeatureInput] = useState("");
 
   const { data: product, isLoading } = useQuery<Product>({
@@ -48,6 +49,9 @@ export default function AdminProductForm() {
       badge: "",
       featured: 0,
       features: [],
+      attachmentUrl: "",
+      attachmentFilename: "",
+      attachmentSize: "",
     },
     values: product ? {
       ...product,
@@ -112,6 +116,49 @@ export default function AdminProductForm() {
     } finally {
       setImageUploading(false);
     }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFileUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/upload/file", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error("파일 업로드 실패");
+
+      const data = await response.json();
+      form.setValue("attachmentUrl", data.url);
+      form.setValue("attachmentFilename", data.filename || file.name);
+      form.setValue("attachmentSize", formatFileSize(data.size || file.size));
+      toast({
+        title: "업로드 완료",
+        description: "파일이 업로드되었습니다.",
+      });
+    } catch (error) {
+      toast({
+        title: "업로드 실패",
+        description: error instanceof Error ? error.message : "파일 업로드에 실패했습니다.",
+        variant: "destructive",
+      });
+    } finally {
+      setFileUploading(false);
+    }
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
   };
 
   const addFeature = () => {
@@ -287,6 +334,38 @@ export default function AdminProductForm() {
                             />
                             {imageUploading && <span className="text-sm text-muted-foreground">업로드 중...</span>}
                           </div>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="attachmentUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>첨부 파일 (선택)</FormLabel>
+                      <FormControl>
+                        <div className="space-y-2">
+                          <Input {...field} value={field.value || ""} placeholder="파일 URL" data-testid="input-attachment-url" />
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="file"
+                              onChange={handleFileUpload}
+                              disabled={fileUploading}
+                              data-testid="input-file-upload"
+                              className="flex-1"
+                            />
+                            {fileUploading && <span className="text-sm text-muted-foreground">업로드 중...</span>}
+                          </div>
+                          {form.watch("attachmentFilename") && (
+                            <div className="text-sm text-muted-foreground">
+                              파일명: {form.watch("attachmentFilename")}
+                              {form.watch("attachmentSize") && ` (${form.watch("attachmentSize")})`}
+                            </div>
+                          )}
                         </div>
                       </FormControl>
                       <FormMessage />

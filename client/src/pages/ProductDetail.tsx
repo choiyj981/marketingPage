@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, Link } from "wouter";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, Download } from "lucide-react";
 import SEO from "@/components/SEO";
 import StructuredData from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
@@ -193,6 +193,23 @@ export default function ProductDetail() {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Download Button */}
+              {product.attachmentUrl && (
+                <div className="mt-8 pt-8 border-t">
+                  <Button
+                    onClick={() => {
+                      window.location.href = `/api/products/${product.id}/download`;
+                    }}
+                    className="gap-2"
+                    data-testid="button-download-attachment"
+                  >
+                    <Download className="h-4 w-4" />
+                    {product.attachmentFilename || "파일 다운로드"}
+                    {product.attachmentSize && ` (${product.attachmentSize})`}
+                  </Button>
                 </div>
               )}
             </div>

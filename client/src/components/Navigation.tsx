@@ -82,6 +82,7 @@ export default function Navigation() {
               <Link 
                 key={link.path} 
                 href={link.path}
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 data-testid={`link-${link.label.toLowerCase()}`}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors hover-elevate active-elevate-2 ${
                   location === link.path
@@ -108,7 +109,11 @@ export default function Navigation() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 {moreLinks.map((link) => (
-                  <Link key={link.path} href={link.path}>
+                  <Link 
+                    key={link.path} 
+                    href={link.path}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  >
                     <DropdownMenuItem
                       data-testid={`link-${link.label.toLowerCase()}`}
                       className="cursor-pointer"
@@ -182,7 +187,10 @@ export default function Navigation() {
                   <Link 
                     key={link.path} 
                     href={link.path}
-                    onClick={() => setIsMobileOpen(false)}
+                    onClick={() => {
+                      setIsMobileOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
                     data-testid={`link-mobile-${link.label.toLowerCase()}`}
                     className={`block px-4 py-3 rounded-md text-base font-medium transition-colors hover-elevate ${
                       location === link.path

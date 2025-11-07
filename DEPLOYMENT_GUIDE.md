@@ -7,7 +7,7 @@
 ### 필요한 정보
 - Git 저장소: https://github.com/choiyj981/marketingPage
 - Docker Hub 사용자명: `docckerchoi`
-- SSH 서버 IP: `34.73.27.245` (외부), `10.142.0.2` (내부)
+- SSH 서버 IP: `35.237.229.92` (외부), `10.142.0.2` (내부)
 - SSH 사용자명: `docckerchoi`
 - 데이터베이스:
   - 사용자명: `choiyj981`
@@ -22,7 +22,7 @@
 ### 1단계: SSH 접속
 
 ```bash
-ssh docckerchoi@34.73.27.245
+ssh docckerchoi@35.237.229.92
 ```
 
 ### 2단계: 기존 PostgreSQL 백업 및 제거
@@ -96,7 +96,7 @@ SESSION_SECRET=OWE1NDhmOWQtNjA0MS00YTQwLTk4MDgtMWYyYjJkYmYzYzFmY2UwZGIwNzYtMTJiM
 
 ```bash
 cd C:\Users\CYJ\Desktop\모든파일\파이썬자동화프로그램\웹사이트
-scp local_backup.sql docckerchoi@34.73.27.245:~/marketingPage/
+scp local_backup.sql docckerchoi@35.237.229.92:~/marketingPage/
 ```
 
 ### 7단계: Docker Hub 로그인
@@ -163,8 +163,8 @@ docker-compose -f docker-compose.prod.yml exec postgres psql -U choiyj981 -d mar
 ## ✅ 완료 확인
 
 브라우저에서 접속:
-- **애플리케이션**: http://34.73.27.245:8080
-- **PostgreSQL**: 34.73.27.245:5432
+- **애플리케이션**: http://35.237.229.92:8080
+- **PostgreSQL**: 35.237.229.92:5432
 
 ---
 

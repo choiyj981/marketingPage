@@ -15,12 +15,12 @@ docker-compose -f docker-compose.prod.yml exec postgres psql -U choiyj981 -d mar
 
 1. **로컬에서 스크립트를 서버로 전송**:
 ```bash
-scp ssh_postgres.sh docckerchoi@34.73.27.245:~/marketingPage/
+scp ssh_postgres.sh docckerchoi@35.237.229.92:~/marketingPage/
 ```
 
 2. **SSH 서버에서 실행 권한 부여**:
 ```bash
-ssh docckerchoi@34.73.27.245
+ssh docckerchoi@35.237.229.92
 cd ~/marketingPage
 chmod +x ssh_postgres.sh
 ```

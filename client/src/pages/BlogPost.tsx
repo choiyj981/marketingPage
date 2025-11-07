@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, Link } from "wouter";
-import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Download } from "lucide-react";
 import SEO from "@/components/SEO";
 import StructuredData from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
@@ -149,6 +149,23 @@ export default function BlogPost() {
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
           </div>
+
+          {/* Download Button */}
+          {post.attachmentUrl && (
+            <div className="mt-8 pt-8 border-t">
+              <Button
+                onClick={() => {
+                  window.location.href = `/api/blog/${post.id}/download`;
+                }}
+                className="gap-2"
+                data-testid="button-download-attachment"
+              >
+                <Download className="h-4 w-4" />
+                {post.attachmentFilename || "파일 다운로드"}
+                {post.attachmentSize && ` (${post.attachmentSize})`}
+              </Button>
+            </div>
+          )}
         </div>
       </article>
 

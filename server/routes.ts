@@ -348,6 +348,120 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // File download endpoint - 서버 인스턴스 내부 파일 다운로드
+  app.get("/api/download/:type/:filename", async (req, res) => {
+    try {
+      const { type, filename } = req.params;
+      
+      // type 검증 (images 또는 files만 허용)
+      if (type !== 'images' && type !== 'files') {
+        return res.status(400).json({ error: "잘못된 파일 타입입니다" });
+      }
+
+      const filePath = resolve(__dirname, "..", "public", "uploads", type, filename);
+      
+      // 파일 존재 확인
+      try {
+        await fs.access(filePath);
+      } catch {
+        return res.status(404).json({ error: "파일을 찾을 수 없습니다" });
+      }
+
+      // 파일 다운로드
+      res.download(filePath, (err) => {
+        if (err) {
+          console.error("File download error:", err);
+          if (!res.headersSent) {
+            res.status(500).json({ error: "파일 다운로드에 실패했습니다" });
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Download endpoint error:", error);
+      res.status(500).json({ error: "파일 다운로드에 실패했습니다" });
+    }
+  });
+
+  // Blog post file download endpoint
+  app.get("/api/blog/:id/download", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const post = await storage.getBlogPostById(id);
+      
+      if (!post || !post.attachmentUrl) {
+        return res.status(404).json({ error: "파일을 찾을 수 없습니다" });
+      }
+
+      // attachmentUrl에서 파일 경로 추출 (/uploads/files/filename 형식)
+      const urlPath = post.attachmentUrl.replace(/^\/uploads\//, '');
+      const [type, ...filenameParts] = urlPath.split('/');
+      const filename = filenameParts.join('/');
+      
+      const filePath = resolve(__dirname, "..", "public", "uploads", type, filename);
+      
+      // 파일 존재 확인
+      try {
+        await fs.access(filePath);
+      } catch {
+        return res.status(404).json({ error: "파일을 찾을 수 없습니다" });
+      }
+
+      // 원본 파일명으로 다운로드
+      const downloadFilename = post.attachmentFilename || filename;
+      res.download(filePath, downloadFilename, (err) => {
+        if (err) {
+          console.error("Blog post file download error:", err);
+          if (!res.headersSent) {
+            res.status(500).json({ error: "파일 다운로드에 실패했습니다" });
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Blog post download endpoint error:", error);
+      res.status(500).json({ error: "파일 다운로드에 실패했습니다" });
+    }
+  });
+
+  // Product file download endpoint
+  app.get("/api/products/:id/download", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const product = await storage.getProductById(id);
+      
+      if (!product || !product.attachmentUrl) {
+        return res.status(404).json({ error: "파일을 찾을 수 없습니다" });
+      }
+
+      // attachmentUrl에서 파일 경로 추출 (/uploads/files/filename 형식)
+      const urlPath = product.attachmentUrl.replace(/^\/uploads\//, '');
+      const [type, ...filenameParts] = urlPath.split('/');
+      const filename = filenameParts.join('/');
+      
+      const filePath = resolve(__dirname, "..", "public", "uploads", type, filename);
+      
+      // 파일 존재 확인
+      try {
+        await fs.access(filePath);
+      } catch {
+        return res.status(404).json({ error: "파일을 찾을 수 없습니다" });
+      }
+
+      // 원본 파일명으로 다운로드
+      const downloadFilename = product.attachmentFilename || filename;
+      res.download(filePath, downloadFilename, (err) => {
+        if (err) {
+          console.error("Product file download error:", err);
+          if (!res.headersSent) {
+            res.status(500).json({ error: "파일 다운로드에 실패했습니다" });
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Product download endpoint error:", error);
+      res.status(500).json({ error: "파일 다운로드에 실패했습니다" });
+    }
+  });
+
   // Admin Blog CRUD
   app.post("/api/blog", isAuthenticated, isAdmin, async (req, res) => {
     try {

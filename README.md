@@ -168,7 +168,7 @@ git push origin main
 
 ```bash
 # SSH 서버 접속
-ssh choiyj981@34.73.27.245
+ssh choiyj981@35.237.229.92
 
 # 서버에서 실행
 cd ~/marketingPage
@@ -262,7 +262,7 @@ docker-compose -f docker-compose.dev.yml exec app npm run db:push
 
 ```bash
 # 서버 PostgreSQL에 직접 접속
-docker run -it --rm postgres:15-alpine psql -h 34.73.27.245 -p 5432 -U choiyj981 -d marketingpage
+docker run -it --rm postgres:15-alpine psql -h 35.237.229.92 -p 5432 -U choiyj981 -d marketingpage
 ```
 
 ---
@@ -294,7 +294,7 @@ docker run -it --rm postgres:15-alpine psql -h 34.73.27.245 -p 5432 -U choiyj981
    - 제품 추가 → 저장
 
 2. **서버에서 확인**
-   - `http://34.73.27.245:8080/admin` 접속
+   - `http://35.237.229.92:8080/admin` 접속
    - 방금 추가한 제품이 보임!
 
 3. **반대도 가능**
@@ -306,7 +306,7 @@ docker run -it --rm postgres:15-alpine psql -h 34.73.27.245 -p 5432 -U choiyj981
 
 ```
 로컬 Docker 앱 ──┐
-                 ├──→ 서버 PostgreSQL (34.73.27.245:5432)
+                 ├──→ 서버 PostgreSQL (35.237.229.92:5432)
 서버 Docker 앱 ──┘
 ```
 
@@ -359,7 +359,7 @@ git push origin main
    - 초록색 체크 표시 = 성공 ✅
 
 2. **서버에서 확인**
-   - 약 1-2분 후 `http://34.73.27.245:8080` 접속
+   - 약 1-2분 후 `http://35.237.229.92:8080` 접속
    - 변경사항이 반영되었는지 확인
 
 ### 자동 배포 설정 (이미 완료됨)
@@ -370,7 +370,7 @@ git push origin main
 
 **필요한 GitHub Secrets** (이미 설정하셨다고 함):
 - `SSH_PRIVATE_KEY`: SSH 개인 키
-- `SSH_HOST`: 서버 IP (`34.73.27.245`)
+- `SSH_HOST`: 서버 IP (`35.237.229.92`)
 - `SSH_USER`: SSH 사용자명 (`choiyj981`)
 
 ### 자동 배포 작동 원리

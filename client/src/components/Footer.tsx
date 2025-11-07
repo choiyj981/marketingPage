@@ -1,50 +1,7 @@
 import { Link } from "wouter";
 import { Facebook, Twitter, Linkedin, Instagram, Mail } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-
-const newsletterSchema = z.object({
-  email: z.string().email("올바른 이메일 주소를 입력해주세요"),
-  name: z.string().min(2, "이름은 최소 2자 이상이어야 합니다"),
-});
-
-type NewsletterForm = z.infer<typeof newsletterSchema>;
 
 export default function Footer() {
-  const { toast } = useToast();
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<NewsletterForm>({
-    resolver: zodResolver(newsletterSchema),
-  });
-
-  const subscribeMutation = useMutation({
-    mutationFn: async (data: NewsletterForm) => {
-      return await apiRequest("POST", "/api/newsletter/subscribe", data);
-    },
-    onSuccess: () => {
-      toast({
-        title: "뉴스레터 구독이 완료되었습니다!",
-        description: "최신 광고 인사이트를 이메일로 받아보세요.",
-      });
-      reset();
-    },
-    onError: () => {
-      toast({
-        title: "구독에 실패했습니다",
-        description: "다시 시도해 주세요.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const onSubmit = (data: NewsletterForm) => {
-    subscribeMutation.mutate(data);
-  };
 
   const footerLinks = {
     company: [
@@ -77,56 +34,6 @@ export default function Footer() {
   return (
     <footer className="bg-card border-t mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        {/* Newsletter Section */}
-        <div className="mb-12 pb-12 border-b">
-          <div className="max-w-2xl mx-auto text-center space-y-4">
-            <h3 className="font-display font-bold text-2xl md:text-3xl text-foreground" data-testid="text-newsletter-title">
-              최신 광고 인사이트를 받아보세요
-            </h3>
-            <p className="text-muted-foreground leading-relaxed" data-testid="text-newsletter-subtitle">
-              실전 마케팅 전략과 광고 운영 팁을 이메일로 받아보세요
-            </p>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
-              <div className="flex-1">
-                <Input
-                  {...register("name")}
-                  type="text"
-                  placeholder="이름"
-                  className="w-full"
-                  data-testid="input-newsletter-name"
-                />
-                {errors.name && (
-                  <p className="text-xs text-destructive mt-1" data-testid="error-newsletter-name">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-              <div className="flex-1">
-                <Input
-                  {...register("email")}
-                  type="email"
-                  placeholder="이메일"
-                  className="w-full"
-                  data-testid="input-newsletter-email"
-                />
-                {errors.email && (
-                  <p className="text-xs text-destructive mt-1" data-testid="error-newsletter-email">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-              <Button 
-                type="submit" 
-                disabled={subscribeMutation.isPending}
-                data-testid="button-newsletter-subscribe"
-                className="sm:w-auto"
-              >
-                {subscribeMutation.isPending ? "구독 중..." : "구독하기"}
-              </Button>
-            </form>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Section */}
           <div className="space-y-4">
@@ -164,6 +71,11 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link 
                     href={link.href}
+                    onClick={() => {
+                      if (link.href.startsWith('/')) {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
                     data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover-elevate active-elevate-2 px-1 py-0.5 rounded"
                   >
@@ -182,6 +94,11 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link 
                     href={link.href}
+                    onClick={() => {
+                      if (link.href.startsWith('/')) {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
                     data-testid={`link-footer-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block hover-elevate active-elevate-2 px-1 py-0.5 rounded"
                   >
@@ -226,6 +143,27 @@ export default function Footer() {
               >
                 contact@businessplatform.com
               </a>
+            </div>
+          </div>
+          
+          {/* Version Info */}
+          <div className="mt-4 pt-4 border-t">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
+              <span className="font-mono">v1.0.0</span>
+              <span className="hidden sm:inline">•</span>
+              <span className="font-mono">
+                {(() => {
+                  const now = new Date();
+                  const year = now.getFullYear();
+                  const month = String(now.getMonth() + 1).padStart(2, '0');
+                  const day = String(now.getDate()).padStart(2, '0');
+                  const hours = String(now.getHours()).padStart(2, '0');
+                  const minutes = String(now.getMinutes()).padStart(2, '0');
+                  return `${year}-${month}-${day} ${hours}:${minutes}`;
+                })()}
+              </span>
+              <span className="hidden sm:inline">•</span>
+              <span className="font-mono">{import.meta.env.MODE || 'production'}</span>
             </div>
           </div>
         </div>

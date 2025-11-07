@@ -17,6 +17,9 @@ export const blogPosts = pgTable("blog_posts", {
   readTime: text("read_time").notNull(),
   featured: integer("featured").notNull().default(0),
   tags: text("tags").array().notNull().default(sql`'{}'::text[]`),
+  attachmentUrl: text("attachment_url"),
+  attachmentFilename: text("attachment_filename"),
+  attachmentSize: text("attachment_size"),
 });
 
 export const products = pgTable("products", {
@@ -32,6 +35,9 @@ export const products = pgTable("products", {
   featured: integer("featured").notNull().default(0),
   features: text("features").array().notNull(),
   tags: text("tags").array().notNull().default(sql`'{}'::text[]`),
+  attachmentUrl: text("attachment_url"),
+  attachmentFilename: text("attachment_filename"),
+  attachmentSize: text("attachment_size"),
 });
 
 export const resources = pgTable("resources", {
