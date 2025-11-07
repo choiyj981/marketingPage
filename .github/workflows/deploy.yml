@@ -54,6 +54,13 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     
+    - name: Git 커밋 시간 가져오기
+      id: git-commit-time
+      run: |
+        COMMIT_TIME=$(git log -1 --format=%ci)
+        echo "commit_time=$COMMIT_TIME" >> $GITHUB_OUTPUT
+        echo "Git 커밋 시간: $COMMIT_TIME"
+    
     - name: Docker 이미지 빌드 및 푸시
       uses: docker/build-push-action@v5
       with:
@@ -63,6 +70,8 @@ jobs:
         tags: docckerchoi/marketingpage:latest
         cache-from: type=registry,ref=docckerchoi/marketingpage:latest
         cache-to: type=inline
+        build-args: |
+          GIT_COMMIT_TIME=${{ steps.git-commit-time.outputs.commit_time }}
 
   # ============================================
   # 3단계: 서버 배포 (빌드 없음!)

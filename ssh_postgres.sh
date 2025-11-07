@@ -7,3 +7,4 @@ cd ~/marketingPage 2>/dev/null || cd ~/marketingpage 2>/dev/null || echo "프로
 # PostgreSQL 컨테이너에 접속
 docker-compose -f docker-compose.prod.yml exec postgres psql -U choiyj981 -d marketingpage
 
+

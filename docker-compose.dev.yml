@@ -45,7 +45,9 @@ services:
       - ./client:/app/client
       - ./shared:/app/shared
       - ./public:/app/public
+      - ./scripts:/app/scripts
       # 루트 디렉토리의 설정 파일들 마운트
+      - ./package.json:/app/package.json
       - ./vite.config.ts:/app/vite.config.ts
       - ./tsconfig.json:/app/tsconfig.json
       - ./tailwind.config.ts:/app/tailwind.config.ts

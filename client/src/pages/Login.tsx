@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useRoute } from "wouter";
+import { useLocation, useRoute, Link } from "wouter";
 import { z } from "zod";
 import { LogIn, Mail, Lock } from "lucide-react";
 import SEO from "@/components/SEO";
@@ -198,8 +198,15 @@ export default function Login() {
             </form>
           </Form>
 
+          <div className="mt-6 text-center text-sm">
+            <span className="text-muted-foreground">계정이 없으신가요? </span>
+            <Link href="/signup" className="text-primary hover:underline font-medium">
+              회원가입
+            </Link>
+          </div>
+
           {isAdminRoute && (
-            <div className="mt-6 p-4 bg-muted rounded-lg">
+            <div className="mt-4 p-4 bg-muted rounded-lg">
               <p className="text-sm text-muted-foreground text-center">
                 관리자 페이지에 접근하려면 로그인이 필요합니다.
               </p>

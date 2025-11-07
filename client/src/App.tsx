@@ -31,6 +31,7 @@ import AdminNewsletter from "@/pages/AdminNewsletter";
 import AdminMetrics from "@/pages/AdminMetrics";
 import FAQ from "@/pages/FAQ";
 import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -56,6 +57,7 @@ function Router() {
         <Route path="/contact" component={Contact} />
         <Route path="/faq" component={FAQ} />
         <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
         <Route path="/admin" component={Admin} />
         <Route path="/admin/blog" component={AdminBlog} />
         <Route path="/admin/blog/new" component={AdminBlogForm} />

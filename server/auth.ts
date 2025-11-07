@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import session from "express-session";
 import type { Express, RequestHandler } from "express";
 import connectPg from "connect-pg-simple";
-import bcrypt from "bcrypt";
+// bcrypt 제거 - 평문 비밀번호 사용
 import { storage } from "./storage";
 import type { User } from "@shared/schema";
 
@@ -63,8 +63,8 @@ export async function setupAuth(app: Express) {
             return done(null, false, { message: "이메일 또는 비밀번호가 올바르지 않습니다." });
           }
 
-          const isValidPassword = await bcrypt.compare(password, user.passwordHash);
-          if (!isValidPassword) {
+          // 평문 비밀번호 비교
+          if (password !== user.passwordHash) {
             return done(null, false, { message: "이메일 또는 비밀번호가 올바르지 않습니다." });
           }
 
@@ -127,34 +127,82 @@ export async function setupAuth(app: Express) {
   // Register endpoint (optional, for creating new accounts)
   app.post("/api/register", async (req, res) => {
     try {
-      const { email, password, firstName, lastName } = req.body;
+      const { email, password, firstName, lastName, username, phone } = req.body;
 
-      if (!email || !password) {
-        return res.status(400).json({ message: "이메일과 비밀번호를 입력해주세요." });
+      // 필수 필드 검증
+      if (!email || !password || !firstName || !lastName) {
+        return res.status(400).json({ message: "이메일, 비밀번호, 이름, 성을 모두 입력해주세요." });
       }
 
+      // 이메일 형식 검증
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: "올바른 이메일 주소를 입력해주세요." });
+      }
+
+      // 비밀번호 강도 검증
       if (password.length < 8) {
         return res.status(400).json({ message: "비밀번호는 최소 8자 이상이어야 합니다." });
       }
 
-      const existingUser = await storage.getUserByEmail(email);
-      if (existingUser) {
+      // 비밀번호 복잡도 검증 (영문, 숫자 포함)
+      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)/;
+      if (!passwordRegex.test(password)) {
+        return res.status(400).json({ message: "비밀번호는 영문과 숫자를 포함해야 합니다." });
+      }
+
+      // 이메일 중복 확인
+      const existingUserByEmail = await storage.getUserByEmail(email);
+      if (existingUserByEmail) {
         return res.status(400).json({ message: "이미 존재하는 이메일입니다." });
       }
 
-      const passwordHash = await bcrypt.hash(password, 10);
+      // 사용자명 중복 확인 (선택사항이지만 제공된 경우)
+      if (username) {
+        const existingUserByUsername = await storage.getUserByUsername(username);
+        if (existingUserByUsername) {
+          return res.status(400).json({ message: "이미 사용 중인 사용자명입니다." });
+        }
+      }
+
+      // 전화번호 형식 검증 (선택사항이지만 제공된 경우)
+      if (phone) {
+        const phoneRegex = /^[0-9-]+$/;
+        if (!phoneRegex.test(phone) || phone.replace(/-/g, '').length < 10) {
+          return res.status(400).json({ message: "올바른 전화번호 형식을 입력해주세요." });
+        }
+      }
+
+      // 평문 비밀번호 저장
+      // ID 생성: username이 있으면 username 사용, 없으면 email의 @ 앞부분 사용
+      const userId = username || email.split("@")[0];
       const newUser = await storage.upsertUser({
+        id: userId, // ID를 알아볼 수 있는 문자열로 설정
         email,
-        passwordHash,
-        firstName: firstName || null,
-        lastName: lastName || null,
+        username: username || null,
+        passwordHash: password, // 평문으로 저장
+        firstName,
+        lastName,
+        phone: phone || null,
         isAdmin: false,
+        status: "active",
       });
 
       const { passwordHash: _, ...userWithoutPassword } = newUser;
       res.status(201).json({ message: "회원가입이 완료되었습니다.", user: userWithoutPassword });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Registration error:", error);
+      
+      // 데이터베이스 제약조건 오류 처리
+      if (error.code === '23505') { // unique_violation
+        if (error.constraint?.includes('email')) {
+          return res.status(400).json({ message: "이미 존재하는 이메일입니다." });
+        }
+        if (error.constraint?.includes('username')) {
+          return res.status(400).json({ message: "이미 사용 중인 사용자명입니다." });
+        }
+      }
+      
       res.status(500).json({ message: "회원가입 중 오류가 발생했습니다." });
     }
   });

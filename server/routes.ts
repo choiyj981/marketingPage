@@ -18,11 +18,11 @@ import {
   insertMetricsSnapshotSchema
 } from "@shared/schema";
 import { z } from "zod";
-import bcrypt from "bcrypt";
+// bcrypt 제거 - 평문 비밀번호 사용
 import { setupAuth, isAuthenticated } from "./auth";
 import { uploadImage, uploadFile } from "./upload";
 
-// Admin middleware - checks if user has isAdmin permission
+// Admin middleware - checks if user has isAdmin permission or is master
 const isAdmin = async (req: any, res: Response, next: NextFunction) => {
   try {
     if (!req.user || !req.user.id) {
@@ -32,6 +32,7 @@ const isAdmin = async (req: any, res: Response, next: NextFunction) => {
     const userId = req.user.id;
     const user = await storage.getUser(userId);
 
+    // 관리자(isAdmin=true)인 경우만 접근 허용
     if (!user || !user.isAdmin) {
       return res.status(403).json({ error: "관리자 권한이 필요합니다" });
     }
@@ -133,10 +134,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+
   // Admin account creation endpoint (development only)
   app.post("/api/admin/create-admin", async (req, res) => {
     try {
-      const { email, password } = req.body;
+      const { email, password, firstName, lastName, username } = req.body;
 
       if (!email || !password) {
         return res.status(400).json({ message: "이메일과 비밀번호를 입력해주세요." });
@@ -152,6 +154,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const updatedUser = await storage.upsertUser({
           ...existingUser,
           isAdmin: true,
+          status: "active",
         });
         const { passwordHash: _, ...userWithoutPassword } = updatedUser;
         return res.json({ 
@@ -160,13 +163,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      const passwordHash = await bcrypt.hash(password, 10);
+      // 평문 비밀번호 저장
+      // ID 생성: username이 있으면 username 사용, 없으면 "admin" 사용
+      const adminId = username || "admin";
       const adminUser = await storage.upsertUser({
+        id: adminId, // ID를 알아볼 수 있는 문자열로 설정
         email,
-        passwordHash,
-        firstName: "Admin",
-        lastName: "User",
+        username: username || `admin_${Date.now()}`,
+        passwordHash: password, // 평문으로 저장
+        firstName: firstName || "Admin",
+        lastName: lastName || "User",
         isAdmin: true,
+        status: "active",
       });
 
       const { passwordHash: __, ...userWithoutPassword } = adminUser;
@@ -174,8 +182,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "관리자 계정이 생성되었습니다.", 
         user: userWithoutPassword 
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Admin creation error:", error);
+      
+      if (error.code === '23505') { // unique_violation
+        if (error.constraint?.includes('email')) {
+          return res.status(400).json({ message: "이미 존재하는 이메일입니다." });
+        }
+        if (error.constraint?.includes('username')) {
+          return res.status(400).json({ message: "이미 사용 중인 사용자명입니다." });
+        }
+      }
+      
       res.status(500).json({ message: "관리자 계정 생성 중 오류가 발생했습니다." });
     }
   });

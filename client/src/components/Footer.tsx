@@ -152,7 +152,7 @@ export default function Footer() {
               <span className="font-mono">v1.0.0</span>
               <span className="hidden sm:inline">•</span>
               <span className="font-mono">
-                {(() => {
+                {import.meta.env.VITE_BUILD_TIME || (() => {
                   const now = new Date();
                   const year = now.getFullYear();
                   const month = String(now.getMonth() + 1).padStart(2, '0');
