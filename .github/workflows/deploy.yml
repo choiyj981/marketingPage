@@ -62,14 +62,28 @@ jobs:
           
           # Docker 이미지 재빌드 및 재시작
           echo "🐳 Docker 이미지 빌드 중..."
-          docker-compose -f docker-compose.prod.yml build --no-cache
+          docker-compose -f docker-compose.prod.yml build --no-cache 2>&1 | tee /tmp/build.log || {
+            echo "❌ 빌드 실패!"
+            cat /tmp/build.log
+            exit 1
+          }
+          echo "✅ 빌드 완료!"
           echo "🐳 Docker 컨테이너 재시작..."
-          docker-compose -f docker-compose.prod.yml up -d
+          docker-compose -f docker-compose.prod.yml up -d || {
+            echo "❌ 컨테이너 시작 실패!"
+            exit 1
+          }
           
           # 컨테이너 상태 확인
           echo "✅ 배포 완료! 컨테이너 상태 확인 중..."
           docker-compose -f docker-compose.prod.yml ps
           
+          # 컨테이너 로그 확인 (최근 20줄)
+          echo ""
+          echo "📋 최근 로그 확인..."
+          docker-compose -f docker-compose.prod.yml logs --tail=20 app || true
+          
+          echo ""
           echo "🎉 배포 성공!"
         EOF
     
