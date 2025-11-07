@@ -20,16 +20,26 @@ jobs:
         mkdir -p ~/.ssh
         chmod 700 ~/.ssh
         
-        # SSH 개인 키 저장 (여러 줄 지원)
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+        # SSH 개인 키 저장 (여러 줄 올바르게 처리)
+        # base64 디코딩 시도 (필요한 경우)
+        if echo "${{ secrets.SSH_PRIVATE_KEY }}" | grep -q "BEGIN"; then
+          # 이미 올바른 형식
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+        else
+          # base64로 인코딩된 경우 디코딩
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/id_ed25519
+        fi
+        
         chmod 600 ~/.ssh/id_ed25519
         
         # SSH 키 형식 확인
         echo "SSH 키 파일 확인:"
         head -n 1 ~/.ssh/id_ed25519
+        echo "키 파일 크기:"
+        ls -lh ~/.ssh/id_ed25519
         
         # 서버 호스트 키 추가
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
         chmod 644 ~/.ssh/known_hosts
     
     - name: SSH 연결 테스트
