@@ -61,8 +61,10 @@ jobs:
           git pull origin main
           
           # Docker 이미지 재빌드 및 재시작
+          echo "🐳 Docker 이미지 빌드 중..."
+          docker-compose -f docker-compose.prod.yml build --no-cache
           echo "🐳 Docker 컨테이너 재시작..."
-          docker-compose -f docker-compose.prod.yml up -d --build
+          docker-compose -f docker-compose.prod.yml up -d
           
           # 컨테이너 상태 확인
           echo "✅ 배포 완료! 컨테이너 상태 확인 중..."

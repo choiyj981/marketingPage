@@ -18,7 +18,9 @@ services:
     restart: unless-stopped
 
   app:
-    image: docckerchoi/marketingpage:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: marketingpage-app
     environment:
       DATABASE_URL: postgresql://choiyj981:981749@postgres:5432/marketingpage
