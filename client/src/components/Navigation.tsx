@@ -49,8 +49,8 @@ export default function Navigation() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-background/95 backdrop-blur-lg shadow-sm border-b"
-          : "bg-transparent"
+          ? "bg-white/95 backdrop-blur-lg shadow-sm border-b border-border"
+          : "bg-white/80 backdrop-blur-sm"
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -66,7 +66,7 @@ export default function Navigation() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
               </svg>
             </div>
-            <span className="font-display font-bold text-lg md:text-xl bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+            <span className="font-display text-lg md:text-xl font-bold text-foreground">
               오토마케터
             </span>
           </Link>
@@ -84,10 +84,8 @@ export default function Navigation() {
                 href={link.path}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 data-testid={`link-${link.label.toLowerCase()}`}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors hover-elevate active-elevate-2 ${
-                  location === link.path
-                    ? "text-primary"
-                    : "text-foreground/70 hover:text-foreground"
+                className={`px-4 py-2 rounded-md text-sm transition-colors hover-elevate active-elevate-2 font-medium ${
+                  location === link.path ? "text-primary" : "text-foreground/70 hover:text-foreground"
                 }`}
               >
                 {link.label}

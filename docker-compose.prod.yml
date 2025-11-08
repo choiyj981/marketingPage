@@ -1,40 +1,41 @@
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: marketingpage-db
-    environment:
-      POSTGRES_USER: choiyj981
-      POSTGRES_PASSWORD: 981749
-      POSTGRES_DB: marketingpage
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U choiyj981 -d marketingpage"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
+  # PostgreSQL 데이터베이스 컨테이너 (서버 DB 사용으로 주석 처리)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: marketingpage-db
+  #   environment:
+  #     POSTGRES_USER: choiyj981
+  #     POSTGRES_PASSWORD: 981749
+  #     POSTGRES_DB: marketingpage
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U choiyj981 -d marketingpage"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   restart: unless-stopped
 
   app:
     # Docker Hub에서 이미지 가져오기 (서버에서 빌드하지 않음)
     image: docckerchoi/marketingpage:latest
     container_name: marketingpage-app
     environment:
-      DATABASE_URL: postgresql://choiyj981:981749@postgres:5432/marketingpage
-      SESSION_SECRET: ${SESSION_SECRET}
+      # 서버의 PostgreSQL 사용 (35.237.229.92는 서버의 외부 IP)
+      DATABASE_URL: postgresql://choiyj981:981749@35.237.229.92:5432/marketingpage
+      SESSION_SECRET: ${SESSION_SECRET:-1407565e1677388823f1e261528f6f7e09490e55e8f7e03bd0954e69616c5060}
       PORT: 8080
       NODE_ENV: production
     ports:
       - "8080:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
+    # depends_on 제거 (서버 DB 사용으로 로컬 postgres 의존성 없음)
     volumes:
       - ./public/uploads:/app/public/uploads
     restart: unless-stopped
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:
+#     # 데이터베이스 데이터 영구 저장 (서버 DB 사용으로 불필요)
 

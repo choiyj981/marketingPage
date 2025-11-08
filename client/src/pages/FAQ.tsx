@@ -31,7 +31,7 @@ export default function FAQ() {
   ) || [];
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-24 pb-16 bg-[#F4F9FF]">
       <SEO
         title="자주 묻는 질문 - 광고 운영 FAQ | 오토마케터"
         description="광고 운영, 광고 교육, 광고 서비스에 대해 자주 묻는 질문과 답변을 확인하세요. 페이스북 광고, 구글 애즈, SNS 마케팅 관련 궁금증을 해결해드립니다."

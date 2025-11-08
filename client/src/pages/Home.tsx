@@ -119,12 +119,12 @@ export default function Home() {
               statsCards.map((stat, index) => (
                 <Card 
                   key={index} 
-                  className="p-6 text-center hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 animate-fade-in backdrop-blur-sm bg-card/95" 
+                  className="p-6 text-center hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 animate-fade-in backdrop-blur-sm bg-card/95"
                   data-testid={`card-stat-${index}`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <CardContent className="p-0 space-y-2">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto">
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto bg-primary/10">
                       <stat.icon className="h-6 w-6 text-primary" data-testid={`icon-stat-${index}`} />
                     </div>
                     <div className="text-3xl md:text-4xl font-bold text-primary" data-testid={`text-stat-value-${index}`}>
@@ -142,7 +142,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 md:py-20">
+      <section className="py-16 md:py-20 bg-[#F4F9FF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-foreground mb-4" data-testid="text-features-title">
@@ -155,9 +155,14 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="text-center p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 animate-fade-in" data-testid={`card-feature-${index}`} style={{ animationDelay: `${index * 0.15}s` }}>
+              <Card 
+                key={index} 
+                className="text-center p-8 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 animate-fade-in"
+                data-testid={`card-feature-${index}`}
+                style={{ animationDelay: `${index * 0.15}s` }}
+              >
                 <CardContent className="space-y-4 pt-6">
-                  <div className="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center mx-auto">
+                  <div className="w-14 h-14 rounded-lg flex items-center justify-center mx-auto bg-primary/10">
                     <feature.icon className="h-7 w-7 text-primary" data-testid={`icon-feature-${index}`} />
                   </div>
                   <h3 className="font-semibold text-xl" data-testid={`text-feature-title-${index}`}>
@@ -174,7 +179,7 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 md:py-20 bg-muted/30">
+      <section className="py-16 md:py-20 bg-[#EEF2FF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8 md:mb-12">
             <div>
@@ -215,7 +220,7 @@ export default function Home() {
 
       {/* Services Section */}
       {!servicesLoading && services.length > 0 && (
-        <section className="py-16 md:py-20">
+        <section className="py-16 md:py-20 bg-[#F4F9FF]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 md:mb-16">
               <h2 className="font-display font-bold text-3xl md:text-4xl text-foreground mb-4" data-testid="text-services-title">
@@ -245,7 +250,7 @@ export default function Home() {
       )}
 
       {/* Blog Section */}
-      <section className="py-16 md:py-20 bg-muted/30">
+      <section className="py-16 md:py-20 bg-[#EEF2FF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8 md:mb-12">
             <div>

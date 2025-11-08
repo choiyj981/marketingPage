@@ -30,7 +30,7 @@ export default function ProductDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-24 pb-16">
+      <div className="min-h-screen pt-24 pb-16 bg-[#EEF2FF]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="h-96 animate-pulse bg-muted" />
         </div>
@@ -40,7 +40,7 @@ export default function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="min-h-screen pt-24 pb-16">
+      <div className="min-h-screen pt-24 pb-16 bg-[#EEF2FF]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
           <Link href="/products">
@@ -57,7 +57,7 @@ export default function ProductDetail() {
   // Custom layout for naver-blog-automation product
   if (slug === "naver-blog-automation") {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-[#EEF2FF]">
         <SEO
           title={`${product.title} - 네이버 블로그 자동화 프로그램 | 오토마케터`}
           description={product.description || product.fullDescription}
@@ -80,7 +80,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#EEF2FF]">
       <SEO
         title={`${product.title} - 광고 교육 | 오토마케터`}
         description={product.description || product.fullDescription}

@@ -31,7 +31,7 @@ export default function Resources() {
   });
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-24 pb-16 bg-[#EEF2FF]">
       <SEO
         title="마케팅 자료실 - 무료 광고 운영 가이드 & 템플릿 | 오토마케터"
         description="광고 운영에 필요한 모든 자료를 무료로 제공합니다. 광고 운영 가이드, 마케팅 템플릿, 캠페인 체크리스트 등 실전에서 바로 사용할 수 있는 자료를 다운로드하세요."

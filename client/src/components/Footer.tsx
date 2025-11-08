@@ -43,7 +43,7 @@ export default function Footer() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                 </svg>
               </div>
-              <span className="font-display font-bold text-xl bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">오토마케터</span>
+              <span className="font-display font-bold text-xl text-foreground">오토마케터</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               효과적인 광고 솔루션과 마케팅 전략을 제공하는 프리미엄 플랫폼입니다.
@@ -149,11 +149,11 @@ export default function Footer() {
           {/* Version Info */}
           <div className="mt-4 pt-4 border-t">
             <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
-              <span className="font-mono">
+              <span className="font-mono text-muted-foreground">
                 v{import.meta.env.VITE_VERSION || import.meta.env.VITE_BUILD_TIME || '1.0.0'}
               </span>
               <span className="hidden sm:inline">•</span>
-              <span className="font-mono">
+              <span className="font-mono text-muted-foreground">
                 {import.meta.env.VITE_BUILD_TIME || (() => {
                   const now = new Date();
                   const year = now.getFullYear();
@@ -165,7 +165,7 @@ export default function Footer() {
                 })()}
               </span>
               <span className="hidden sm:inline">•</span>
-              <span className="font-mono">{import.meta.env.MODE || 'production'}</span>
+              <span className="font-mono text-muted-foreground">{import.meta.env.MODE || 'production'}</span>
             </div>
           </div>
         </div>

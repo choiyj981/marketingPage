@@ -81,7 +81,7 @@ export default function Contact() {
   ];
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-24 pb-16 bg-[#EEF2FF]">
       <SEO
         title="문의하기 - 광고 상담 신청 | 오토마케터"
         description="광고 운영, 마케팅 전략에 대해 궁금하신 점이 있으신가요? 전문가가 직접 답변해드립니다. 1:1 맞춤 상담을 통해 귀사의 비즈니스에 최적화된 광고 전략을 제안받으세요."

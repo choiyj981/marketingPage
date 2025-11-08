@@ -28,7 +28,7 @@ export default function BlogPost() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-24 pb-16">
+      <div className="min-h-screen pt-24 pb-16 bg-[#F4F9FF]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card className="h-96 animate-pulse bg-muted" />
         </div>
@@ -38,7 +38,7 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div className="min-h-screen pt-24 pb-16">
+      <div className="min-h-screen pt-24 pb-16 bg-[#F4F9FF]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
           <Link href="/blog">
@@ -53,7 +53,7 @@ export default function BlogPost() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#F4F9FF]">
       <SEO
         title={`${post.title} | 오토마케터 블로그`}
         description={post.excerpt}
