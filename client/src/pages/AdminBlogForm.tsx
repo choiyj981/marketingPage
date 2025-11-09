@@ -243,7 +243,7 @@ export default function AdminBlogForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>카테고리</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value || undefined}>
                         <FormControl>
                           <SelectTrigger data-testid="select-category">
                             <SelectValue placeholder="카테고리 선택" />
