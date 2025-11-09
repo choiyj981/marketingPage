@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { ArrowLeft, X } from "lucide-react";
 import { insertServiceSchema, type Service } from "@shared/schema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 
@@ -24,8 +24,8 @@ export default function AdminServiceForm() {
   const [featureInput, setFeatureInput] = useState("");
 
   const { data: service, isLoading } = useQuery<Service>({
-    queryKey: ["/api/services", params?.id],
-    enabled: isEditing,
+    queryKey: ["/api/admin/services", params?.id],
+    enabled: isEditing && !!params?.id,
   });
 
   const form = useForm<z.infer<typeof insertServiceSchema>>({
@@ -37,8 +37,14 @@ export default function AdminServiceForm() {
       icon: "",
       features: [],
     },
-    values: service,
   });
+
+  // 데이터 로드 후 폼 리셋
+  useEffect(() => {
+    if (service && isEditing) {
+      form.reset(service);
+    }
+  }, [service, isEditing, form]);
 
   const saveMutation = useMutation({
     mutationFn: async (data: z.infer<typeof insertServiceSchema>) => {

@@ -8,7 +8,7 @@ export const blogPosts = pgTable("blog_posts", {
   title: text("title").notNull(),
   slug: text("slug").notNull().unique(),
   excerpt: text("excerpt").notNull(),
-  content: text("content").notNull(),
+  content: text("content"), // nullable: 마크다운 파일에서 읽음
   category: text("category").notNull(),
   imageUrl: text("image_url").notNull(),
   author: text("author").notNull().default("Business Platform"),

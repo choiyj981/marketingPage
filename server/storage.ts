@@ -94,6 +94,7 @@ export interface IStorage {
   createFaq(data: InsertFaqEntry): Promise<FaqEntry>;
   getFaqs(): Promise<FaqEntry[]>;
   getAllFaqs(): Promise<FaqEntry[]>;
+  getFaqById(id: string): Promise<FaqEntry | undefined>;
   updateFaq(id: string, data: Partial<InsertFaqEntry>): Promise<FaqEntry>;
   deleteFaq(id: string): Promise<void>;
 
@@ -718,6 +719,11 @@ export class PgStorage implements IStorage {
       .select()
       .from(faqEntries)
       .orderBy(asc(faqEntries.category), asc(faqEntries.displayOrder));
+  }
+
+  async getFaqById(id: string): Promise<FaqEntry | undefined> {
+    const [faq] = await db.select().from(faqEntries).where(eq(faqEntries.id, id));
+    return faq;
   }
 
   async updateFaq(id: string, data: Partial<InsertFaqEntry>): Promise<FaqEntry> {

@@ -58,6 +58,12 @@ app.use((req, res, next) => {
     throw err;
   });
 
+  // 개발 모드에서 마크다운 파일 → DB 자동 동기화
+  if (app.get("env") === "development") {
+    const { syncMarkdownToDb } = await import('./sync-markdown');
+    await syncMarkdownToDb();
+  }
+
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes

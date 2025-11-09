@@ -494,6 +494,7 @@ netstat -ano | findstr :5000
 
 | 문서 | 설명 |
 |------|------|
+| [BLOG_WATCHER_GUIDE.md](./BLOG_WATCHER_GUIDE.md) | 마크다운 파일 자동 동기화 가이드 ⭐ |
 | [DOCKER_LOCAL.md](./DOCKER_LOCAL.md) | 로컬 Docker 사용법 상세 가이드 |
 | [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) | 서버 배포 가이드 |
 | [ADMIN_SETUP.md](./ADMIN_SETUP.md) | 관리자 계정 설정 가이드 |

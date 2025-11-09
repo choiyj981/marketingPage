@@ -10,7 +10,8 @@
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "create-admin": "tsx scripts/create-admin.ts",
-    "create-test-users": "tsx scripts/create-test-users.ts"
+    "create-test-users": "tsx scripts/create-test-users.ts",
+    "sync-md-to-db": "tsx scripts/sync-md-to-db.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -47,6 +48,7 @@
     "@types/memoizee": "^0.4.12",
     "@types/multer": "^2.0.0",
     "bcrypt": "^5.1.1",
+    "chokidar": "^4.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -59,8 +61,10 @@
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "framer-motion": "^11.13.1",
+    "gray-matter": "^4.0.3",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.453.0",
+    "marked": "^15.0.12",
     "memoizee": "^0.4.17",
     "memorystore": "^1.6.7",
     "multer": "^2.0.2",

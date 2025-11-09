@@ -14,6 +14,9 @@ RUN npm ci
 # 소스 코드 복사
 COPY . .
 
+# blog-posts 폴더가 없으면 생성
+RUN mkdir -p blog-posts
+
 # Git 커밋 시간을 환경 변수로 설정 (빌드 시 사용)
 ENV GIT_COMMIT_TIME=${GIT_COMMIT_TIME}
 

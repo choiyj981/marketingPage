@@ -120,13 +120,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth endpoints
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.id;
+      const userId = req.user?.id;
+      if (!userId) {
+        console.log("No user ID in session:", req.user);
+        return res.status(401).json({ message: "인증이 필요합니다." });
+      }
+      console.log("Fetching user:", userId);
       const user = await storage.getUser(userId);
       if (!user) {
+        console.log("User not found:", userId);
         return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
       }
       // Don't send password hash to client
       const { passwordHash, ...userWithoutPassword } = user;
+      console.log("User fetched successfully:", userWithoutPassword.email);
       res.json(userWithoutPassword);
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -218,7 +225,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Blog post not found" });
       }
       
-      res.json(post);
+      // 마크다운 파일에서 content 읽기
+      const { getMarkdownContent } = await import('./markdown');
+      const content = await getMarkdownContent(slug);
+      
+      // content가 있으면 마크다운 파일에서 읽은 것으로 교체
+      const postWithContent = {
+        ...post,
+        content: content || post.content || '', // 마크다운 파일 우선, 없으면 DB에서
+      };
+      
+      res.json(postWithContent);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch blog post" });
     }
@@ -494,6 +511,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/admin/blog/:id", isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const post = await storage.getBlogPostById(id);
+      if (!post) {
+        return res.status(404).json({ error: "블로그 포스트를 찾을 수 없습니다" });
+      }
+      res.json(post);
+    } catch (error) {
+      console.error("Error fetching blog post:", error);
+      res.status(500).json({ error: "블로그 포스트를 가져오는데 실패했습니다" });
+    }
+  });
+
   app.put("/api/blog/:id", isAuthenticated, isAdmin, async (req, res) => {
     try {
       const { id } = req.params;
@@ -537,6 +568,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "유효성 검사 실패", details: error.errors });
       }
       res.status(500).json({ error: "제품 생성에 실패했습니다" });
+    }
+  });
+
+  app.get("/api/admin/products/:id", isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const product = await storage.getProductById(id);
+      if (!product) {
+        return res.status(404).json({ error: "제품을 찾을 수 없습니다" });
+      }
+      res.json(product);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+      res.status(500).json({ error: "제품을 가져오는데 실패했습니다" });
     }
   });
 
@@ -586,6 +631,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/admin/resources/:id", isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const resource = await storage.getResourceById(id);
+      if (!resource) {
+        return res.status(404).json({ error: "자료를 찾을 수 없습니다" });
+      }
+      res.json(resource);
+    } catch (error) {
+      console.error("Error fetching resource:", error);
+      res.status(500).json({ error: "자료를 가져오는데 실패했습니다" });
+    }
+  });
+
   app.put("/api/resources/:id", isAuthenticated, isAdmin, async (req, res) => {
     try {
       const { id } = req.params;
@@ -629,6 +688,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "유효성 검사 실패", details: error.errors });
       }
       res.status(500).json({ error: "서비스 생성에 실패했습니다" });
+    }
+  });
+
+  app.get("/api/admin/services/:id", isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const service = await storage.getServiceById(id);
+      if (!service) {
+        return res.status(404).json({ error: "서비스를 찾을 수 없습니다" });
+      }
+      res.json(service);
+    } catch (error) {
+      console.error("Error fetching service:", error);
+      res.status(500).json({ error: "서비스를 가져오는데 실패했습니다" });
     }
   });
 
@@ -785,6 +858,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "유효성 검사 실패", details: error.errors });
       }
       res.status(500).json({ error: "FAQ 생성에 실패했습니다" });
+    }
+  });
+
+  app.get("/api/admin/faq/:id", isAuthenticated, isAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const faq = await storage.getFaqById(id);
+      if (!faq) {
+        return res.status(404).json({ error: "FAQ를 찾을 수 없습니다" });
+      }
+      res.json(faq);
+    } catch (error) {
+      console.error("Error fetching FAQ:", error);
+      res.status(500).json({ error: "FAQ를 가져오는데 실패했습니다" });
     }
   });
 

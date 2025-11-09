@@ -46,6 +46,7 @@ services:
       - ./shared:/app/shared
       - ./public:/app/public
       - ./scripts:/app/scripts
+      - ./blog-posts:/app/blog-posts  # 마크다운 파일 폴더
       # 루트 디렉토리의 설정 파일들 마운트
       - ./package.json:/app/package.json
       - ./vite.config.ts:/app/vite.config.ts

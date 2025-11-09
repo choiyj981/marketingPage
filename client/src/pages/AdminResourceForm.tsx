@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { ArrowLeft, X } from "lucide-react";
 import { insertResourceSchema, type Resource } from "@shared/schema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 
@@ -31,8 +31,8 @@ export default function AdminResourceForm() {
   const [tagInput, setTagInput] = useState("");
 
   const { data: resource, isLoading } = useQuery<Resource>({
-    queryKey: ["/api/resources", params?.id],
-    enabled: isEditing,
+    queryKey: ["/api/admin/resources", params?.id],
+    enabled: isEditing && !!params?.id,
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,12 +51,19 @@ export default function AdminResourceForm() {
       featured: 0,
       tags: [],
     },
-    values: resource ? {
-      ...resource,
-      featured: resource.featured || 0,
-      downloads: resource.downloads || 0,
-    } : undefined,
   });
+
+  // 데이터 로드 후 폼 리셋
+  useEffect(() => {
+    if (resource && isEditing) {
+      form.reset({
+        ...resource,
+        featured: resource.featured || 0,
+        downloads: resource.downloads || 0,
+        publishedAt: resource.publishedAt ? new Date(resource.publishedAt).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+      });
+    }
+  }, [resource, isEditing, form]);
 
   const saveMutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
@@ -209,7 +216,7 @@ export default function AdminResourceForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>카테고리</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger data-testid="select-category">
                               <SelectValue placeholder="카테고리 선택" />
@@ -233,7 +240,7 @@ export default function AdminResourceForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>파일 유형</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger data-testid="select-file-type">
                               <SelectValue placeholder="파일 유형 선택" />

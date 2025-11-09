@@ -99,15 +99,19 @@ export async function setupAuth(app: Express) {
   app.post("/api/login", (req, res, next) => {
     passport.authenticate("local", (err: Error | null, user: User | false, info?: { message?: string }) => {
       if (err) {
+        console.error("Login error:", err);
         return res.status(500).json({ message: "서버 오류가 발생했습니다." });
       }
       if (!user) {
+        console.log("Login failed:", info?.message);
         return res.status(401).json({ message: info?.message || "인증에 실패했습니다." });
       }
       req.logIn(user, (err: Error | null) => {
         if (err) {
+          console.error("Session save error:", err);
           return res.status(500).json({ message: "로그인 중 오류가 발생했습니다." });
         }
+        console.log("Login successful for user:", user.id, user.email);
         const { passwordHash, ...userWithoutPassword } = user as User & { passwordHash?: string };
         return res.json({ message: "로그인 성공", user: userWithoutPassword });
       });

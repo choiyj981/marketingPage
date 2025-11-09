@@ -33,6 +33,7 @@ services:
     # depends_on 제거 (서버 DB 사용으로 로컬 postgres 의존성 없음)
     volumes:
       - ./public/uploads:/app/public/uploads
+      - ./blog-posts:/app/blog-posts  # 마크다운 파일 폴더
     restart: unless-stopped
 
 # volumes:

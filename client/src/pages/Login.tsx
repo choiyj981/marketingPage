@@ -57,19 +57,23 @@ export default function Login() {
       const response = await apiRequest("POST", "/api/login", data);
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       // 사용자 정보 쿼리 무효화하여 다시 가져오기
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      await queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      // 사용자 정보를 즉시 다시 가져오기
+      await queryClient.refetchQueries({ queryKey: ["/api/auth/user"] });
       
       toast({
         title: "로그인 성공",
         description: `환영합니다, ${data.user?.firstName || data.user?.email || "사용자"}님!`,
       });
 
-      // 리다이렉트 처리
-      const params = new URLSearchParams(window.location.search);
-      const redirectTo = params.get("redirect") || "/admin";
-      setLocation(redirectTo);
+      // 리다이렉트 처리 (약간의 지연을 두어 상태 업데이트 보장)
+      setTimeout(() => {
+        const params = new URLSearchParams(window.location.search);
+        const redirectTo = params.get("redirect") || "/admin";
+        setLocation(redirectTo);
+      }, 100);
     },
     onError: (error: any) => {
       let errorMessage = "로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.";

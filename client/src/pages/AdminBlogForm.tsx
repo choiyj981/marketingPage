@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { ArrowLeft, Upload } from "lucide-react";
 import { insertBlogPostSchema, type BlogPost } from "@shared/schema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = insertBlogPostSchema.extend({
@@ -29,8 +29,8 @@ export default function AdminBlogForm() {
   const [fileUploading, setFileUploading] = useState(false);
 
   const { data: post, isLoading } = useQuery<BlogPost>({
-    queryKey: ["/api/blog", params?.id],
-    enabled: isEditing,
+    queryKey: ["/api/admin/blog", params?.id],
+    enabled: isEditing && !!params?.id,
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,11 +51,18 @@ export default function AdminBlogForm() {
       attachmentFilename: "",
       attachmentSize: "",
     },
-    values: post ? {
-      ...post,
-      featured: post.featured || 0,
-    } : undefined,
   });
+
+  // 데이터 로드 후 폼 리셋
+  useEffect(() => {
+    if (post && isEditing) {
+      form.reset({
+        ...post,
+        featured: post.featured || 0,
+        publishedAt: post.publishedAt ? new Date(post.publishedAt).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+      });
+    }
+  }, [post, isEditing, form]);
 
   const saveMutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
@@ -236,7 +243,7 @@ export default function AdminBlogForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>카테고리</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger data-testid="select-category">
                             <SelectValue placeholder="카테고리 선택" />

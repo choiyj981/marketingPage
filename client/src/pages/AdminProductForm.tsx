@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { ArrowLeft, X } from "lucide-react";
 import { insertProductSchema, type Product } from "@shared/schema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 
@@ -32,8 +32,8 @@ export default function AdminProductForm() {
   const [featureInput, setFeatureInput] = useState("");
 
   const { data: product, isLoading } = useQuery<Product>({
-    queryKey: ["/api/products", params?.id],
-    enabled: isEditing,
+    queryKey: ["/api/admin/products", params?.id],
+    enabled: isEditing && !!params?.id,
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -53,12 +53,18 @@ export default function AdminProductForm() {
       attachmentFilename: "",
       attachmentSize: "",
     },
-    values: product ? {
-      ...product,
-      featured: product.featured || 0,
-      badge: product.badge || "",
-    } : undefined,
   });
+
+  // 데이터 로드 후 폼 리셋
+  useEffect(() => {
+    if (product && isEditing) {
+      form.reset({
+        ...product,
+        featured: product.featured || 0,
+        badge: product.badge || "",
+      });
+    }
+  }, [product, isEditing, form]);
 
   const saveMutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
@@ -253,7 +259,7 @@ export default function AdminProductForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>카테고리</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger data-testid="select-category">
                               <SelectValue placeholder="카테고리 선택" />

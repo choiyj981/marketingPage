@@ -25,6 +25,7 @@ import { insertFaqEntrySchema, type FaqEntry, type InsertFaqEntry } from "@share
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Link, useParams, useLocation } from "wouter";
+import { useEffect } from "react";
 
 export default function AdminFaqForm() {
   const { user } = useAuth();
@@ -33,23 +34,34 @@ export default function AdminFaqForm() {
   const { toast } = useToast();
   const isEditing = !!id;
 
-  const { data: faqs } = useQuery<FaqEntry[]>({
-    queryKey: ["/api/admin/faq"],
-    enabled: isEditing,
+  const { data: faq, isLoading } = useQuery<FaqEntry>({
+    queryKey: ["/api/admin/faq", id],
+    enabled: isEditing && !!id,
   });
-
-  const faq = faqs?.find((f) => f.id === id);
 
   const form = useForm<InsertFaqEntry>({
     resolver: zodResolver(insertFaqEntrySchema),
     defaultValues: {
-      question: faq?.question || "",
-      answer: faq?.answer || "",
-      category: faq?.category || "",
-      displayOrder: faq?.displayOrder || 0,
-      status: (faq?.status as "published" | "draft" | undefined) || "published",
+      question: "",
+      answer: "",
+      category: "",
+      displayOrder: 0,
+      status: "published" as "published" | "draft",
     },
   });
+
+  // 데이터 로드 후 폼 리셋
+  useEffect(() => {
+    if (faq && isEditing) {
+      form.reset({
+        question: faq.question || "",
+        answer: faq.answer || "",
+        category: faq.category || "",
+        displayOrder: faq.displayOrder || 0,
+        status: (faq.status as "published" | "draft") || "published",
+      });
+    }
+  }, [faq, isEditing, form]);
 
   const createMutation = useMutation({
     mutationFn: async (data: InsertFaqEntry) => {
@@ -113,6 +125,18 @@ export default function AdminFaqForm() {
             <Link href="/">
               <Button className="mt-4">홈으로 돌아가기</Button>
             </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isEditing && isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">로딩 중...</p>
           </CardContent>
         </Card>
       </div>
@@ -218,7 +242,7 @@ export default function AdminFaqForm() {
                       <FormLabel>상태</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value}
                         data-testid="select-status"
                       >
                         <FormControl>
