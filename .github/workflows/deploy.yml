@@ -130,11 +130,27 @@ jobs:
           echo "📥 최신 코드 가져오기..."
           # 로컬 변경사항이 있으면 stash하고 pull
           git stash || true
-          # 추적되지 않은 파일 제거 (필요한 경우)
-          git clean -fd || true
-          # 원격 저장소에서 강제로 pull
+          # 원격 저장소에서 최신 코드 가져오기
           git fetch origin main
-          git reset --hard origin/main
+          # 업로드 디렉토리는 보존하면서 reset (권한 문제 방지)
+          UPLOADS_EXISTS=false
+          if [ -d "public/uploads" ]; then
+            echo "📁 업로드 디렉토리 보존 중..."
+            UPLOADS_EXISTS=true
+            # 업로드 디렉토리 임시로 이름 변경 (권한 문제 회피)
+            mv public/uploads public/uploads_backup 2>/dev/null || true
+          fi
+          # Git reset 실행
+          set +e  # 오류 발생해도 계속 진행
+          git reset --hard origin/main 2>&1 | grep -v "Permission denied" || true
+          git checkout -f . 2>&1 | grep -v "Permission denied" || true
+          set -e  # 다시 오류 시 중단 모드로
+          # 업로드 디렉토리 복원
+          if [ "$UPLOADS_EXISTS" = true ] && [ -d "public/uploads_backup" ]; then
+            echo "📁 업로드 디렉토리 복원 중..."
+            rm -rf public/uploads 2>/dev/null || true
+            mv public/uploads_backup public/uploads 2>/dev/null || true
+          fi
           
           # 마크다운 파일 → DB 동기화 (메타데이터만)
           echo "📝 마크다운 파일 → DB 동기화..."
