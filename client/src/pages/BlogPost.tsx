@@ -146,7 +146,7 @@ export default function BlogPost() {
           <div className="prose prose-lg max-w-none" data-testid="text-content">
             <div
               className="text-foreground/90 leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
           </div>
 

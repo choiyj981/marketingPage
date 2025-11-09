@@ -283,7 +283,7 @@ export default function AdminBlogForm() {
                     <FormItem>
                       <FormLabel>본문</FormLabel>
                       <FormControl>
-                        <Textarea {...field} rows={12} data-testid="input-content" />
+                        <Textarea {...field} value={field.value || ""} rows={12} data-testid="input-content" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
