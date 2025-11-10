@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, Link } from "wouter";
 import { ArrowLeft, Calendar, Clock, Download } from "lucide-react";
@@ -10,9 +11,20 @@ import SocialShare from "@/components/SocialShare";
 import RelatedContent from "@/components/RelatedContent";
 import type { BlogPost } from "@shared/schema";
 
+declare global {
+  interface Window {
+    mermaid?: {
+      initialize: (config: any) => void;
+      contentLoaded: () => void;
+      run: (config: any) => Promise<void>;
+    };
+  }
+}
+
 export default function BlogPost() {
   const [, params] = useRoute("/blog/:slug");
   const slug = params?.slug;
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const { data: post, isLoading } = useQuery<BlogPost>({
     queryKey: ["/api/blog", slug],
@@ -25,6 +37,21 @@ export default function BlogPost() {
     },
     enabled: !!slug,
   });
+
+  // Mermaid 다이어그램 자동 렌더링
+  useEffect(() => {
+    if (!post?.content || !contentRef.current) return;
+    
+    // Mermaid가 로드되었는지 확인하고 렌더링
+    if (window.mermaid) {
+      // DOM이 완전히 렌더링된 후 Mermaid 렌더링
+      const timer = setTimeout(() => {
+        window.mermaid?.contentLoaded();
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [post?.content]);
 
   if (isLoading) {
     return (
@@ -145,6 +172,7 @@ export default function BlogPost() {
           {/* Content */}
           <div className="prose prose-lg max-w-none" data-testid="text-content">
             <div
+              ref={contentRef}
               className="text-foreground/90 leading-relaxed"
               dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />

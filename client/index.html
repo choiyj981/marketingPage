@@ -8,6 +8,16 @@
     <title>오토마케터 - 광고 & 마케팅 전문 플랫폼!!</title>
     
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <!-- Mermaid 다이어그램 라이브러리 -->
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ 
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+      });
+      window.mermaid = mermaid;
+    </script>
   </head>
   <body style="margin: 0; padding: 0;">
     <div id="root"></div>

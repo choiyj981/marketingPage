@@ -7,6 +7,7 @@ import { join } from 'path';
 import matter from 'gray-matter';
 import type { InsertBlogPost } from '@shared/schema';
 import { db } from './db';
+import chokidar from 'chokidar';
 
 const BLOG_POSTS_DIR = process.env.BLOG_POSTS_DIR || './blog-posts';
 
@@ -98,6 +99,56 @@ export async function syncMarkdownToDb(): Promise<void> {
     console.error('⚠️  마크다운 동기화 실패 (계속 진행):');
     console.error(error instanceof Error ? error.message : error);
     console.log('');
+  }
+}
+
+/**
+ * 마크다운 파일 변경 감지 및 자동 동기화
+ * 개발 모드에서만 사용
+ */
+export function watchMarkdownFiles(): void {
+  try {
+    console.log('👀 마크다운 파일 감시 시작...\n');
+    
+    const watcher = chokidar.watch(`${BLOG_POSTS_DIR}/*.md`, {
+      ignored: /(^|[\/\\])\../, // 숨김 파일 무시
+      persistent: true,
+      ignoreInitial: true, // 초기 로드는 syncMarkdownToDb()에서 처리
+    });
+
+    // 디바운스 함수 (연속된 변경을 하나로 묶음)
+    let syncTimeout: NodeJS.Timeout | null = null;
+    const debouncedSync = () => {
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+      }
+      syncTimeout = setTimeout(async () => {
+        console.log('📝 파일 변경 감지 → 동기화 시작...');
+        await syncMarkdownToDb();
+      }, 500); // 500ms 대기
+    };
+
+    watcher
+      .on('add', (path) => {
+        console.log(`➕ 파일 추가: ${path}`);
+        debouncedSync();
+      })
+      .on('change', (path) => {
+        console.log(`✏️  파일 변경: ${path}`);
+        debouncedSync();
+      })
+      .on('unlink', (path) => {
+        console.log(`🗑️  파일 삭제: ${path}`);
+        // 파일 삭제는 수동으로 처리해야 함 (DB에서도 삭제하려면)
+        console.log('   ⚠️  DB에서 수동으로 삭제해주세요.\n');
+      })
+      .on('error', (error) => {
+        console.error('❌ 파일 감시 오류:', error);
+      });
+
+    console.log(`   감시 중: ${BLOG_POSTS_DIR}/*.md\n`);
+  } catch (error) {
+    console.error('⚠️  파일 감시 설정 실패:', error);
   }
 }
 

@@ -26,7 +26,13 @@ export async function getMarkdownContent(slug: string): Promise<string | null> {
       .trim();
     
     // 마크다운 → HTML 변환
-    const htmlContent = marked(cleanedContent);
+    let htmlContent = marked(cleanedContent);
+    
+    // Mermaid 코드 블록을 div.mermaid로 변환 (Mermaid 자동 렌더링을 위해)
+    htmlContent = htmlContent.replace(
+      /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/g,
+      '<div class="mermaid">$1</div>'
+    );
     
     return htmlContent;
   } catch (error) {
