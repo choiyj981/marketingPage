@@ -26,15 +26,15 @@ export async function getMarkdownContent(slug: string): Promise<string | null> {
       .trim();
     
     // 마크다운 → HTML 변환
-    let htmlContent = marked(cleanedContent);
+    const htmlContent = await marked(cleanedContent);
     
     // Mermaid 코드 블록을 div.mermaid로 변환 (Mermaid 자동 렌더링을 위해)
-    htmlContent = htmlContent.replace(
+    const processedContent = htmlContent.replace(
       /<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/g,
       '<div class="mermaid">$1</div>'
     );
     
-    return htmlContent;
+    return processedContent;
   } catch (error) {
     console.error(`마크다운 파일 읽기 실패 (${slug}):`, error);
     return null;
