@@ -152,12 +152,6 @@ jobs:
             mv public/uploads_backup public/uploads 2>/dev/null || true
           fi
           
-          # 마크다운 파일 → DB 동기화 (메타데이터만)
-          echo "📝 마크다운 파일 → DB 동기화..."
-          docker-compose -f docker-compose.prod.yml exec -T app npm run sync-md-to-db || {
-            echo "⚠️  마크다운 동기화 실패 (계속 진행)"
-          }
-          
           # Docker Hub에서 최신 이미지 가져오기 (빌드 없음!)
           echo "🐳 Docker Hub에서 최신 이미지 가져오기..."
           docker-compose -f docker-compose.prod.yml pull || {
@@ -170,6 +164,16 @@ jobs:
           docker-compose -f docker-compose.prod.yml up -d || {
             echo "❌ 컨테이너 시작 실패!"
             exit 1
+          }
+          
+          # 컨테이너가 완전히 시작될 때까지 대기
+          echo "⏳ 컨테이너 시작 대기 중..."
+          sleep 5
+          
+          # 마크다운 파일 → DB 동기화 (컨테이너 재시작 후)
+          echo "📝 마크다운 파일 → DB 동기화..."
+          docker-compose -f docker-compose.prod.yml exec -T app npm run sync-md-to-db || {
+            echo "⚠️  마크다운 동기화 실패 (계속 진행)"
           }
           
           # 컨테이너 상태 확인

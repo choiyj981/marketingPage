@@ -33,9 +33,11 @@ import FAQ from "@/pages/FAQ";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import NotFound from "@/pages/not-found";
+import MaintenanceMode from "@/components/MaintenanceMode";
 
 function Router() {
   const [isAdminRoute] = useRoute("/admin*");
+  const [isMaintenanceRoute] = useRoute("/maintenance");
   const [location] = useLocation();
   
   // 라우트 변경 시 최상단으로 스크롤
@@ -45,8 +47,9 @@ function Router() {
   
   return (
     <>
-      {!isAdminRoute && <Navigation />}
+      {!isAdminRoute && !isMaintenanceRoute && <Navigation />}
       <Switch>
+        <Route path="/maintenance" component={MaintenanceMode} />
         <Route path="/" component={Home} />
         <Route path="/blog" component={Blog} />
         <Route path="/blog/:slug" component={BlogPost} />
@@ -80,7 +83,7 @@ function Router() {
         <Route path="/admin/metrics" component={AdminMetrics} />
         <Route component={NotFound} />
       </Switch>
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isMaintenanceRoute && <Footer />}
     </>
   );
 }

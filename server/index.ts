@@ -58,13 +58,17 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // 개발 모드에서 마크다운 파일 → DB 자동 동기화
+  // 마크다운 파일 → DB 자동 동기화
   if (app.get("env") === "development") {
     const { syncMarkdownToDb, watchMarkdownFiles } = await import('./sync-markdown');
     // 초기 동기화
     await syncMarkdownToDb();
     // 파일 변경 감지 시작
     watchMarkdownFiles();
+  } else {
+    // 프로덕션 모드에서도 초기 동기화 실행 (파일 감시는 안 함)
+    const { syncMarkdownToDb } = await import('./sync-markdown');
+    await syncMarkdownToDb();
   }
 
   // importantly only setup vite in development and after

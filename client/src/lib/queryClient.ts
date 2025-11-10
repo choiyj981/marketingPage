@@ -19,6 +19,15 @@ export async function apiRequest(
     credentials: "include",
   });
 
+  // 서버 재기동 중 (503 Service Unavailable 또는 연결 실패)
+  if (res.status === 503 || res.status === 502 || res.status === 504) {
+    // 재기동 화면으로 리다이렉트
+    if (typeof window !== "undefined" && !window.location.pathname.includes("/maintenance")) {
+      window.location.href = "/maintenance";
+    }
+    throw new Error("Server is restarting");
+  }
+
   await throwIfResNotOk(res);
   return res;
 }
@@ -32,6 +41,15 @@ export const getQueryFn: <T>(options: {
     const res = await fetch(queryKey.join("/") as string, {
       credentials: "include",
     });
+
+    // 서버 재기동 중 (503 Service Unavailable 또는 연결 실패)
+    if (res.status === 503 || res.status === 502 || res.status === 504) {
+      // 재기동 화면으로 리다이렉트
+      if (typeof window !== "undefined" && !window.location.pathname.includes("/maintenance")) {
+        window.location.href = "/maintenance";
+      }
+      throw new Error("Server is restarting");
+    }
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
       return null;
